@@ -1,0 +1,7 @@
+{
+    "apiVersion": 2,
+    "name": "notifima/Notifima",
+    "version": "1.0.0",
+    "title": "Notifima",
+    "editorScript": "file:./index.tsx"
+}

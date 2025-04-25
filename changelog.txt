@@ -1,0 +1,377 @@
+== Changelog ==
+----------------------------------------------------------------------------------------------
+= 2.5.13 - 2024-11-26 =
+* Added - WordPress 6.7.1 compatibility.
+* Added - WooCommerce 9.4.2 compatibility.
+* Fixed - Issue with the block for the "Stock Manager Form".
+
+= 2.5.12 - 2024-10-22 =
+* Added - A new setting to specify lead times for out-of-stock and back-ordered products, allowing sellers to inform customers when items are expected to be available again.
+* Added - WooCommerce 9.3.3 compatibility.
+
+= 2.5.11 - 2024-09-24 =
+* Added - WordPress 6.6.2 compatibility.
+* Added - WooCommerce 9.3.2 compatibility.
+* Fixed - Issue where modifications made in the Personalize Layout settings were not displaying correctly.
+
+= 2.5.10 - 2024-09-10 =
+* Added - Block support for the subscription form.
+* Added - WPML translation support.
+* Updated - Language files.
+
+= 2.5.9 - 2024-09-03 =
+* Added - WooCommerce 9.2.3 compatibility.
+
+= 2.5.8 - 2024-08-08 =
+* Fixed - Resolved activation/deactivation notice.
+
+= 2.5.7 - 2024-08-06 =
+* Added - WordPress 6.6.1 compatibility.
+* Added - WooCommerce 9.1.4 compatibility.
+* Fixed - Issue where subscribers were not included in the downloaded CSV file for the Subscriber list.
+
+= 2.5.6 - 2024-07-23 =
+* Added - WooCommerce 9.1.2 compatibility.
+* Added - Support for translations of some strings.
+* Fixed - The subscription form was not appearing for products with the stock status "On backorder", even when the "Allow Backorder Subscriptions" setting was enabled #213.
+
+= 2.5.5 - 2024-07-02 =
+* Added - WordPress 6.5.5 compatibility.
+* Added - WooCommerce 9.0.2 compatibility.
+* Added -  Settings to restrict guest users from subscribing.
+
+= 2.5.4 - 2024-06-19 =
+* Added - WordPress 6.5.4 compatibility.
+* Added - WooCommerce 9.0.0 compatibility.
+* Fixed - Display subscriber count for out-of-stock items not showing up on the frontend site.
+* Fixed - Allow backorder subscription was not working.
+* Fixed - HTML display in admin mail.
+
+= 2.5.3 - 2024-05-10 =
+* Added - Ability to export all subscriber data as a CSV from the Subscriber List page.
+* Fixed - Issue where migration cron was not running for some sites.
+
+= 2.5.2 - 2024-05-07 =
+* Fixed - Issue with the Product_title.
+
+= 2.5.1 - 2024-05-01 =
+* Fixed - Issue with plugin activation-deactivation notice.
+
+= 2.5.0 - 2024-04-30 =
+* Added - WordPress 6.5.2 compatibility.
+* Added - WooCommerce 8.8.3 compatibility.
+* Added - Revamped plugin codes for improved performance.
+* Added - Enhanced user experience.
+
+= 2.4.2 - 2024-01-25 =
+* Fixed - Rest API related Vulnerability issue.
+* Fixed - Plugin settings page 404 error tied to WordPress permalink structure.
+
+= 2.4.1 - 2024-01-17 =
+* Added - React Code changes for pro.
+* Added - WordPress 6.4.2 compatibility.
+* Added - WooCommerce 8.5.1 compatibility.
+* Updated - Language files.
+
+= 2.4.0 - 2024-01-16 =
+* Added - Coding structure updated. 
+* Dev - Class concept implemented.
+* Added - WordPress 6.4.2 compatibility.
+* Added - WooCommerce 8.4.0 compatibility.
+* Updated - Language files.
+
+= 2.3.0 - 2023-12-04- =
+* Added - WooCommerce 8.3.1 compatibility.
+* Fixed - Subscriber Number Mismatch Issue during Database Migration.
+* Updated - Language files.
+
+= 2.2.0 - 2023-11-20 =
+* Added - WordPress 6.4.1 compatibility.
+* Added - WooCommerce 8.3.0 compatibility.
+* Added - Sample form design section.
+* Fixed - Migration issue.
+* Fixed - Subscriber count in product table.
+* Fixed - Some minor issue.
+* Fixed - Admin dashboard loading issue.
+* Fixed - Undefined array warning.
+* Enhancement - migration in a cron.
+* Dev - Added `product_backin_stock_send_admin` filter.
+* Updated - Language files.
+
+= 2.1.0 - 2023-09-18 =
+* Added - WordPress 6.3.1 compatibility.
+* Added - WooCommerce 8.1.1 compatibility.
+* Added - HPOS Support.
+* Fixed - Database structure.
+* Fixed - Backend setting structure.
+* Fixed - Plugin deactivation issue.
+* Updated - Language files.
+
+= 2.0.3 - 2023-07-25 =
+* Added - WooCommerce 7.9.0 compatibility.
+* Fixed - Email send to admin issue.
+
+= 2.0.2 - 2023-07-10 =
+* Added - WooCommerce 7.8.2 compatibility.
+* Fixed - Email send to admin issue.
+* Fixed - Enable with backorders not working.
+* Fixed - Vulnerability issues.
+* Updated - Language files.
+
+= 2.0.1 - 2023-05-29 =
+* Added - WordPress 6.2.2 compatibility.
+* Added - Email placeholder field.
+* Fixed - Single product page error issue.
+* Fixed - Fixed backorder issues.
+* Updated - Language files.
+
+= 2.0.0 - 2023-05-16 =
+* Added - WordPress 6.2 compatibility.
+* Added - WooCommerce 7.7.0 compatibility.
+* Added - Whole new backend setting page user-friendly design.
+* Added - Admin as a receiver of In stock mail.
+* Added - Support bundle and subscription product types.
+* Fixed - Elementor Support.
+* Fixed - Alert button CSS issue.
+* Fixed - Fixed some minor issues.
+* Dev - Added `woocommerce_instock_alert_email_goes_to_admin` filter.
+* Updated - Language files.
+
+= 1.7.5 - 2022-07-07 =
+* Added - WordPress 6.0 compatibility.
+* Added - WooCommerce 6.6.1 compatibility.
+* Fixed - Fatal errors due to Unsupported operand types #63.
+
+= 1.7.4 - 2022-01-21 =
+* Added - WordPress 5.8.2 compatibility.
+* Added - WooCommerce 6.1.1 compatibility.
+* Added - PHP 8.0.10 compatibility.
+* Fixed - Qtip issues.
+* Fixed - Fatal errors due to Uncaught TypeError #41.
+* Fixed - Jquery Issues #40.
+* Dev - Added `Woocommerce_product_stock_alert_form` action.
+* Dev - Added `Woocommerce_product_stock_alert_form_additional_fields` action.
+* Dev - Added `Woocommerce_product_stock_alert_form_process_additional_fields` action.
+* Updated - Language files.
+
+= 1.7.3 - 2021-08-26 =
+* Fixed - HTML with product name in Stock alert mail.
+* Fixed - Unsubscribe button text.
+* Added - Settings for remove admin email Id and add additional email Id.
+* Added - vendor email with Stock alert admin mail.
+* Added - Double Optin setting modification for MVX-Pro vendor stock alert module.
+* Added - Compatibility of WordPress 5.8.
+* Added - Compatibility of Woocommerce 5.6.0.
+* Updated - Language files.
+
+= 1.7.2 - 2021-05-28 =
+* Added - The dynamic setting for button font size.
+* Added - WooCommerce 5.3.0 compatibility.
+* Added - WordPress 5.7.2 compatibility.
+* Enhancement - HTML Markup improvements.
+* Enhancement - Escaping & securing output.
+* Updated : Language files.
+
+= 1.7.1 - 2020-09-28 =
+* Fixed - Remove Product Subscribers #12.
+* Added - WooCommerce 4.5.2 compatibility.
+* Updated : Language files.
+
+= 1.7.0 - 2020-08-28 =
+* Fixed - Alert box display for backorder products also.
+* Fixed - Product - Variations name added for variable product in export file.
+* Added - WordPress 5.5 compatibility.
+* Added - WooCommerce 4.4.1 compatibility.
+
+= 1.6.1 =
+* Woocommerce 3.8+ compatibility added
+* Fix : Stock alert mail price issue fix #1.
+
+= 1.6.0 =
+* Woocommerce 3.6+ compatibility added
+* Fix : Static Function issue.
+* Enhancement : Product price with / without tax support via email.
+* Enhancement : Subscriber list export feature.
+
+= 1.5.2 =
+* Fix : Remove subscriber for variable product.
+* Fix : Email issue for variation updated via `Bulk Stock Management`.
+* Fix : Undefined product method notice.
+
+= 1.5.1 =
+* Fix : Simple product out of stock issue.
+
+= 1.5.0 =
+* Fix : Minor script issue.
+
+= 1.4.9 =
+* Fix : Stock alert function issue.
+* Updated : Language files.
+
+= 1.4.8 =
+* Added : Product bulk remove subscribers added.
+* Updated : Language files.
+* Fix : Woocommerce backorders issue.
+* Fix : Fixed some minor issues.
+
+= 1.4.7 =
+* Added : Woocommerce product inventory settings added with stock alert.
+* Added : Stock alert email subject and heading customizable.
+* Fix : Fixed some minor issues.
+
+= 1.4.6 =
+* Fix : Fixed alert box issues for variations.
+
+= 1.4.5 =
+* Added: Support for Loco Translate plugin.
+* Added: POT file in language folder
+* Updated: Plugin text domain from product_stock_alert to woocommerce-product-stock-alert
+* Updated: Language files.
+* Woocommerce 3.0.9 compatibility added 
+
+= 1.4.4 =
+* Fix : Fixed some backend settings option issues.
+
+= 1.4.3 =
+* Added : Product variation details added into stock alert emails.
+* Fix : Fixed some minor issues.
+
+= 1.4.2 =
+* Fix : Fixed stock alert shortcode issue.
+
+= 1.4.1 =
+* Fix : Fixed product alert form appearance issue.
+* Fix : Fixed backend product Interested Person(s) column sortable issue.
+
+= 1.4.0 =
+* Woocommerce 3.0+ compatibility added
+* Added : Number of Interested persons shown on product page with backend settings.
+* Added : Product Interested Person(s) column sortable functionalities.
+* Fix : Fixed backend woocommerce order issue.
+* Fix : Fixed variation product alert form and its issues.
+
+= 1.3.2 =
+* Added : Added some CSS/JS on buttons call. 
+* Fix : Fixed stock alert fields disappearance on error message display behavior.
+
+= 1.3.1 =
+* Fix : Fixed some fatal errors, now plugin will work with WooCommerce 2.6+..
+
+= 1.3.0 =
+* Features : Customer can unsubscribe a product which he/she already subscribed.
+* Feature : A confirmation mail will be sent to subscriber after subscribe a product.
+* Feature : [display_stock_alert_form] => Shortcode to display stock alert form in product page.
+* Feature : An export option is added inside 'Tools->WC Stock Alert Export' to export subscribers' list.
+
+= 1.2.0 =
+*   Features : New options added into plugin settings panel to customize alert message after form submission.
+*   Fix : Fixed some issues, now plugin will work with WooCommerce 2.4+.
+
+= 1.1.1 =
+*   Stock alert form will be displayed on backorder product properly.
+*   Sending alert email automatically when backorder is enabled and in-stock is selected issue has been resolved.
+
+= 1.1.0 =
+*   Works with "WooCommerce Subscription Products".
+*   Now this plugin works with Backorders even "in-stock" is selected.
+
+= 1.0.3 =
+*   Plugin settings panel is added to customize stock alert form.
+*   Now alert email will be send as soon as product becomes in-stock.
+*   Now plugin will work with Backorders.
+
+= 1.0.2 =
+*   Fixed minor bug and compatible with latest WooCommerce.
+
+= 1.0.1 =
+*   Fixed some issue and now plugin is working with Variable product.
+
+= 1.0.0 =
+*   Initial release.
+
+
+== Upgrade Notice ==
+= 1.4.9 =
+* Fix : Stock alert function issue.
+* Updated : Language files.
+
+= 1.4.8 =
+* Added : Product bulk remove subscribers added.
+* Updated : Language files.
+* Fix : Woocommerce backorders issue.
+* Fix : Fixed some minor issues.
+
+= 1.4.7 =
+* Added : Woocommerce product inventory settings added with stock alert.
+* Added : Stock alert email subject and heading customizable.
+* Fix : Fixed some minor issues.
+
+= 1.4.6 =
+* Fix : Fixed alert box issues for variations.
+
+= 1.4.5 =
+* Added: Support for Loco Translate plugin.
+* Added: POT file in language folder
+* Updated: Plugin text domain from product_stock_alert to woocommerce-product-stock-alert
+* Updated: Language files.
+* Woocommerce 3.0.9 compatibility added 
+
+= 1.4.4 =
+* Fix : Fixed some backend settings option issues.
+
+= 1.4.3 =
+* Added : Product variation details added into stock alert emails.
+* Fix : Fixed some minor issues.
+
+= 1.4.2 =
+* Fix : Fixed stock alert shortcode issue.
+
+= 1.4.1 =
+* Fix : Fixed product alert form appearance issue.
+* Fix : Fixed backend product Interested Person(s) column sortable issue.
+
+= 1.4.0 =
+* Woocommerce 3.0+ compatibility added
+* Added : Number of Interested persons shown on product page with backend settings.
+* Added : Product Interested Person(s) column sortable functionalities.
+* Fix : Fixed backend woocommerce order issue.
+* Fix : Fixed variation product alert form and its issues.
+
+= 1.3.2 =
+* Added : Added some CSS/JS on buttons call. 
+* Fix : Fixed stock alert fields disappearance on error message display behavior.
+
+= 1.3.1 =
+* Fix : Fixed some fatal errors, now plugin will work with WooCommerce 2.6+..
+
+= 1.3.0 =
+* Features : Customer can unsubscribe a product which he/she already subscribed.
+* Feature : A confirmation mail will be sent to subscriber after subscribe a product.
+* Feature : [display_stock_alert_form] => Shortcode to display stock alert form in product page.
+* Feature : An export option is added inside 'Tools->WC Stock Alert Export' to export subscribers' list.
+
+= 1.2.0 =
+*   Features : New options added into settings panel to customize alert message after form submission.
+*   Fix : Fixed some issues, now plugin will work with WooCommerce 2.4+.
+
+= 1.1.1 =
+*   Stock alert form will be displayed on backorder product properly.
+*   Sending alert email automatically when backorder is enabled and in-stock is selected issue has been resolved.
+
+= 1.1.0 =
+*   Works with "WooCommerce Subscription Products".
+*   Now this plugin works with Backorders even "in-stock" is selected.
+
+= 1.0.3 =
+*   Plugin settings panel is added to customize stock alert form.
+*   Now alert email will be send as soon as product becomes in-stock.
+*   Now plugin will work with Backorders.
+
+= 1.0.2 =
+*   Fixed minor bug and compatible with latest WooCommerce.
+
+= 1.0.1 =
+*   Fixed some issue and now plugin is working with Variable product.
+
+= 1.0.0 =
+*   Initial release.
