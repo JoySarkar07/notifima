@@ -3,6 +3,7 @@ import axios from "axios";
 import { CustomTable, TableCell } from 'zyra';
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import "./ManagestockTable.scss";
+import { Data } from 'react-csv/lib/core';
 
 interface DataType{
     backorders: string;
@@ -30,10 +31,10 @@ interface HeaderType {
 }
 
 const Managestock:React.FC = () => {
-
+  const updateDataUrl = `${ appLocalizer.apiUrl }/notifima/v1/update-product`;
   const fetchDataUrl   = `${appLocalizer.apiUrl}/notifima/v1/get-products`;
   const segmentDataUrl = `${appLocalizer.apiUrl}/notifima/v1/all-products`;
-  const [data, setData] = useState<DataType[]|null>(null);
+  const [data, setData] = useState<DataType[] | null>(null);
   const [headers, setHeaders] = useState([]);
   const [totalProducts, setTotalProducts] = useState();
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -51,6 +52,11 @@ const Managestock:React.FC = () => {
       pageIndex: 0,
       pageSize: 10,
     });
+  const [ uploadData, setUploadData ] = useState( {
+    id: "",
+    name: "",
+    value: "",
+  });
 
   useEffect(() => {
     if (!appLocalizer.khali_dabba) return;
@@ -96,7 +102,6 @@ const Managestock:React.FC = () => {
         headers:parsedData.headers,
         totalProducts:parsedData.total_products
       }
-      console.log("Data : ",data);
     });
   }, [
     rowsPerPage,
@@ -107,53 +112,81 @@ const Managestock:React.FC = () => {
     stockStatus,
   ]);
 
+  const onCellChange = (productId:any, productKey:any, val:any) => {
+    console.log("Input Id value : ",productId);
+    console.log("Input Product key is : ",productKey);
+    console.log("Input value : ",val);
+    if (!data) return;
+    setData(prev => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        [productId]: {
+          ...prev[productId],
+          [productKey]: val,
+        },
+      };
+    });
+  };
+  
   const columns: ColumnDef<Record<string, any>, any>[] = Object.entries(headers)
   .filter(([_, headerData]: [string, HeaderType]) => headerData.name !== 'Image' && headerData.name !== 'Name')
   .map(([key, headerData]: [string, HeaderType]): ColumnDef<Record<string, any>, any> => ({
     id: key,
     header: headerData.name,
-    cell: ({ row }) => {
-      let value = row.original[key];
-      if (headerData.name === "Product") {
-        value = row.original.name;
+    cell: (cellProps) => {
+      const { row } = cellProps;
+      
+      const value = headerData.name === "Product" ? row.original.name : row.original[key];
+      const rowId = row.original.id; // ✅ Fetch id inside cell, not outside
+
+      const isBackOrdersOrStock = headerData.name === "Back orders" || headerData.name === "Stock";
+      const isStockStatus = headerData.name === "Stock status";
+
+      let type = headerData.type;
+      if (isBackOrdersOrStock) {
+        type = row.original.manage_stock ? headerData.type : "";
+      } else if (isStockStatus) {
+        type = row.original.manage_stock ? "" : headerData.type;
       }
+      
       return (
-        <TableCell title={headerData.name} type={headerData.type} header={headerData} fieldValue={value}>
+        <TableCell
+          title={headerData.name}
+          type={type}
+          header={headerData}
+          fieldValue={value}
+          onChange={
+            (e) => {
+              console.log("Row id : ",rowId);
+              console.log("Row : ",row.original);
+              // onCellChange(rowId, key, e.target.value)
+            } // ✅ Now uses correct rowId
+          }
+        >
           {headerData.name === "Product" ? (
-            <>
-              <a href={row.original.link}><img className='products' src={row.original.image} alt="product_image" /></a>
-            </>
-          ):
-          (
-          <p className={headerData.class}>{value}</p>
+            <a href={row.original.link}>
+              <img className="products" src={row.original.image} alt="product_image" />
+            </a>
+          ) : (
+            <p className={headerData.class}>
+              {headerData.type === "number" ? String(value || 0) : value}
+            </p>
           )}
         </TableCell>
       );
-    },
+    }
   }));
 
-  console.log("Columns : ",columns);
-  console.log("Headers : ",headers);
+  // console.log("Columns : ",columns);
+  // console.log("Headers : ",headers);
+  // console.log("Data : ",data);
 
-  const productData = [{
-    id: 64,
-    backorders: "no",
-    image: "http://localhost/wordpress2/wp-content/uploads/2025/02/Pizza.jpg",
-    link: "http://localhost/wordpress2/product/pizza/",
-    manage_stock: false,
-    name: "Pizza",
-    regular_price: "100",
-    sale_price: "90",
-    sku: "-",
-    stock_quantity: null,
-    stock_status: "instock",
-    subscriber_no: "5",
-    type: "Simple"
-  }];
-
-  const tableData = Object.values(data || {});
-
-  console.log("Table Data : ",tableData);
+  let tableData: DataType[] | null = data;
+  if(data){
+    tableData = Object.values(data);
+  }
+  // console.log("Table Data : ",tableData);
 
   return (
     <div>

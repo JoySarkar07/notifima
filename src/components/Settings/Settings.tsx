@@ -1,22 +1,21 @@
 // /* global appLocalizer */
-
+import Brand from "../../assets/images/Brand.png";
+import BrandSmall from "../../assets/images/Brand-small.png";
 import { useLocation } from "react-router-dom";
 import React, { useState, useEffect, JSX } from "react";
 import { __ } from "@wordpress/i18n";
-
-import Tabs from '../AdminLibrary/Tabs/Tabs';
 
 // Context
 import { SettingProvider, useSetting } from "../../contexts/SettingContext";
 
 // Services
 import { getTemplateData } from "../../services/templateService";
-
 // Utils
 import { getAvailableSettings, getSettingById, SettingContent } from "../../utiles/settingUtil";
-import { Support, AdminForm, Banner} from "zyra";
+import { Support, AdminForm, Banner, Tabs} from "zyra";
 import { useModules } from "../../contexts/ModuleContext";
-import ShowProPopup from "../ShowProPopup/ShowProPopup";
+import ShowProPopup from "../Popup/Popup";
+import { Link } from "react-router-dom";
 
 // // Types
 type SettingItem = Record<string,any>;
@@ -29,6 +28,27 @@ interface Products{
     title : string,
     description : string,
 }
+
+const supportLink = [
+    {
+      title: __("Get in touch with Support", "notifima"),
+      icon: "mail",
+      description: __("Reach out to the support team for assistance or guidance.", "notifima"),
+      link: "https://notifima.com/contact-us/",
+    },
+    {
+        title: __("Explore Documentation", "notifima"),
+        icon: "submission-message",
+        description: __("Understand the plugin and its settings.", "notifima"),
+        link: "https://notifima.com/docs/",
+    },
+    {
+        title: __("Contribute Here", "notifima"),
+        icon: "support",
+        description: __("Participate in product enhancement.", "notifima"),
+        link: "https://github.com/multivendorx/woocommerce-product-stock-alert/issues",
+    }
+  ];
 
 const products:Products[]=[
     {
@@ -127,7 +147,12 @@ const Settings: React.FC<SettingsProps> = ({id}) => {
                 currentTab={location.get('subtab') as string}
                 getForm={getForm}
                 BannerSection={getBanner}
-                prepareUrl={(subTab: string) => `?page=notifima#&tab=settings&subtab=${subTab}` }
+                prepareUrl={(subTab: string) => `?page=notifima#&tab=settings&subtab=${ subTab }` }
+                appLocalizer={appLocalizer}
+                brandImg={ Brand } 
+                smallbrandImg={ BrandSmall }
+                supprot={ supportLink }
+                Link={Link}
             />
         </SettingProvider>
     );
