@@ -11,7 +11,8 @@ import { SettingProvider, useSetting } from "../../contexts/SettingContext";
 // Services
 import { getTemplateData } from "../../services/templateService";
 // Utils
-import { getAvailableSettings, getSettingById, SettingContent } from "../../utiles/settingUtil";
+// import { getAvailableSettings, getSettingById, SettingContent } from "../../utiles/settingUtil";
+import { getAvailableSettings, getSettingById, SettingContent } from "zyra";
 import { Support, AdminForm, Banner, Tabs} from "zyra";
 import { useModules } from "../../contexts/ModuleContext";
 import ShowProPopup from "../Popup/Popup";

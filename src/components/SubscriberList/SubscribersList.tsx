@@ -2,7 +2,7 @@
 import { CustomTable, TableCell } from "zyra";
 // import types from customtable zyra
 import type { Subscriber, FilterData }  from "zyra";
-import ShowProPopup from "../ShowProPopup/ShowProPopup";
+import Popup from "../Popup/Popup";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { ReactNode, useEffect, useRef, useState } from "react";
 import { DateRangePicker, RangeKeyDict, Range } from 'react-date-range';
@@ -52,7 +52,7 @@ const SubscribersList = () => {
   const [postStatus, setPostStatus] = useState("");
   const [subscribersStatus, setSubscribersStatus] = useState<SubscriberStatus[] | null>(null);
   const [filters, setFilters] = useState<FilterData>({});
-  const [data, setData] = useState<Subscriber[]>([]);
+  const [data, setData] = useState<Subscriber[] | null>(null);
   const [allData, setAllData] = useState([]);
   const csvLink = useRef<CSVLink & HTMLAnchorElement & { link: HTMLAnchorElement }>(null);
   const [selectedRange, setSelectedRange] = useState([
@@ -168,7 +168,7 @@ const SubscribersList = () => {
 
       });
     }
-  }, []);
+  }, [data]);
 
 
   useEffect(() => {
@@ -186,7 +186,7 @@ const SubscribersList = () => {
       return;
     }
 
-    setData([]);
+    setData(null);
     requestData(
       rowsPerPage,
       currentPage,
@@ -216,6 +216,7 @@ const SubscribersList = () => {
     postStatus?:string
   ) {
     //Fetch the data to show in the table
+    setData(null);
     axios({
       method: "post",
       url: fetchSubscribersDataUrl,
@@ -236,7 +237,7 @@ const SubscribersList = () => {
   }
 
   const handleBulkAction = (event:any) => {
-    const selectedRows = getSelectedRows(rowSelection, data);
+    const selectedRows = getSelectedRows(rowSelection, data as Subscriber[]);
     if (!bulkSelectRef.current?.value) {
       setModalDetails("Please select a action.")
       setOpenModal(true);
@@ -247,7 +248,7 @@ const SubscribersList = () => {
       setOpenModal(true);
     }
 
-    setData([]);
+    setData(null);
 
     axios({
       method: "post",
@@ -436,7 +437,7 @@ const SubscribersList = () => {
                 setOpenDialog(false);
               }}
             ></span>
-            <ShowProPopup />
+            <Popup />
           </Dialog>
           <div
             className="subscriber-img"

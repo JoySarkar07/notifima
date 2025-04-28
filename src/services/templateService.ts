@@ -1,6 +1,6 @@
 /// <reference types="webpack-env" />
 
-const context = require.context('../template/settings', true, /\.ts$/);
+const context = require.context('../components/Settings', true, /\.ts$/);
 
 type SettingNode = {
   name: string;
@@ -44,8 +44,14 @@ const getTemplateData = (): SettingNode[] => {
   return importAll(context);
 };
 
-const getModuleData = () => {
-  return require('../template/modules/index').default;
+const getModuleData = (): any | null => {
+  try {
+    const module = require('../components/Modules/index.ts').default;
+    return module;
+  } catch (error) {
+    console.warn('Module not found, skipping...');
+    return null;
+  }
 };
 
 export { getTemplateData, getModuleData };

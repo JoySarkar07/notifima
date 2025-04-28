@@ -15,7 +15,7 @@ interface DataType{
     regular_price: string;
     sale_price: string;
     sku: string;
-    stock_quantity: number|null;
+    stock_quantity: number | null;
     stock_status: string;
     subscriber_no: string;
     type: string;

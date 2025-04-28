@@ -24,14 +24,17 @@
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@mui/material": "^7.0.2",
+    "@tanstack/react-table": "^8.21.3",
     "@tinymce/tinymce-react": "^6.1.0",
     "@wordpress/react-i18n": "^4.21.0",
     "@wordpress/scripts": "^30.7.0",
+    "react-csv": "^2.2.2",
     "react-data-table-component": "^7.7.0",
+    "react-date-range": "^2.0.1",
     "react-router-dom": "^7.5.0",
     "ts-loader": "^9.5.2",
     "typescript": "^5.8.3",
-    "zyra": "file:../../../../../../../home/techmonastic/Desktop/MyServer/example/zyra"
+    "zyra": "file:../../../../../../Users/joys1/OneDrive/Desktop/PluginElements/zyra"
   },
   "peerDependencies": {
     "react": "^18.3.1",

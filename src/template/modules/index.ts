@@ -1,1 +1,0 @@
-// If the module is implemented, define the template in this file.
