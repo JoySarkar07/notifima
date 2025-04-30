@@ -9,10 +9,10 @@ defined( 'ABSPATH' ) || exit;
  */
 class Subscriber {
     public function __construct() {
-        add_action( 'stock_manager_start_notification_cron_job', [ $this, 'send_instock_notification_corn' ] );
+        add_action( 'notifima_start_notification_cron_job', [ $this, 'send_instock_notification_corn' ] );
         add_action( 'woocommerce_update_product', [ $this, 'send_instock_notification' ], 10, 2 );
         add_action( 'delete_post', [ $this, 'delete_subscriber_all' ] );
-        add_action( 'stock_manager_start_subscriber_migration', [ Install::class, 'subscriber_migration' ] );
+        add_action( 'notifima_start_subscriber_migration', [ Install::class, 'subscriber_migration' ] );
 
         if ( Install::is_migration_running() ) {
             $this->registers_post_status();
@@ -102,7 +102,7 @@ class Subscriber {
         $product_subscribers = self::get_product_subscribers_email( $product->get_id() );
 
         if ( isset( $product_subscribers ) && ! empty( $product_subscribers ) ) {
-            $email = WC()->mailer()->emails[ 'WC_Email_Stock_Manager' ];
+            $email = WC()->mailer()->emails[ 'WC_Email_Notifima' ];
 
             foreach ( $product_subscribers as $subscribe_id => $to ) {
                 $email->trigger( $to, $product );
@@ -128,7 +128,7 @@ class Subscriber {
         // Check the email is already register or not
         $subscriber = $wpdb->get_row(
             $wpdb->prepare(
-                "SELECT * FROM {$wpdb->prefix}stockalert_subscribers 
+                "SELECT * FROM {$wpdb->prefix}notifima_subscribers 
                 WHERE product_id = %d
                 AND email = %s",
                 [ $product_id, $subscriber_email ]
@@ -138,7 +138,7 @@ class Subscriber {
         // Update the status and create time of the subscriber row
         if ( $subscriber ) {
             return $response = $wpdb->update(
-                "{$wpdb->prefix}stockalert_subscribers",
+                "{$wpdb->prefix}notifima_subscribers",
                 [
                     "status"      => 'subscribed',
                     "create_time" => current_time( 'mysql' )
@@ -150,7 +150,7 @@ class Subscriber {
         // Insert new subscriber.
         $response = $wpdb->query(
             $wpdb->prepare(
-                "INSERT INTO {$wpdb->prefix}stockalert_subscribers
+                "INSERT INTO {$wpdb->prefix}notifima_subscribers
                 ( product_id, user_id, email, status )
                 VALUES ( %d, %d, %s, %s )
                 ON DUPLICATE KEY UPDATE
@@ -202,7 +202,7 @@ class Subscriber {
         if( get_post_type( $post_id ) != 'product' ) return;
         
         // Delete subscriber of deleted product
-        $wpdb->delete( $wpdb->prefix . "stockalert_subscribers", [ 'product_id' => $post_id ] );
+        $wpdb->delete( $wpdb->prefix . "notifima_subscribers", [ 'product_id' => $post_id ] );
         delete_post_meta( $post_id, 'no_of_subscribers' );
     }
 
@@ -216,7 +216,7 @@ class Subscriber {
         global $wpdb;
 
         // Delete subscriber of deleted product
-        $wpdb->delete( $wpdb->prefix . "stockalert_subscribers", [
+        $wpdb->delete( $wpdb->prefix . "notifima_subscribers", [
             'product_id' => $product_id,
             'email' => $email,
         ] );
@@ -237,7 +237,7 @@ class Subscriber {
         // Get the result from custom subscribers table. 
         return $wpdb->get_var(
             $wpdb->prepare(
-                "SELECT id FROM {$wpdb->prefix}stockalert_subscribers
+                "SELECT id FROM {$wpdb->prefix}notifima_subscribers
                 WHERE product_id = %d
                 AND email = %s
                 AND status = %s",
@@ -256,7 +256,7 @@ class Subscriber {
 
         // Get subscriber count.
         $subscriber_count = $wpdb->get_var(
-            "SELECT COUNT(*) FROM {$wpdb->prefix}stockalert_subscribers
+            "SELECT COUNT(*) FROM {$wpdb->prefix}notifima_subscribers
             WHERE product_id = {$product_id}
             AND status = 'subscribed'"
         );
@@ -266,22 +266,22 @@ class Subscriber {
     } 
 
     /**
-     * Update the status of stockalert subscriber.
-     * @param mixed $stockalert_id
+     * Update the status of notifima subscriber.
+     * @param mixed $notifima_id
      * @param mixed $status
      * @return \WP_Error|int
      */
-    static function update_subscriber( $stockalert_id, $status ) {
+    static function update_subscriber( $notifima_id, $status ) {
         global $wpdb;
 
         // Update subscrib status
         $response = $wpdb->update(
-            "{$wpdb->prefix}stockalert_subscribers",
+            "{$wpdb->prefix}notifima_subscribers",
             [ "status" => $status ],
-            [ "id"     => $stockalert_id ]
+            [ "id"     => $notifima_id ]
         );
 
-        return $stockalert_id;
+        return $notifima_id;
     }
 
     /**
@@ -293,8 +293,8 @@ class Subscriber {
      */
     static function insert_subscriber_email_trigger( $product, $customer_email ) {
         // Get email object.
-        $admin_mail = WC()->mailer()->emails[ 'WC_Admin_Email_Stock_Manager' ];
-        $cust_mail  = WC()->mailer()->emails[ 'WC_Subscriber_Confirmation_Email_Stock_Manager' ];
+        $admin_mail = WC()->mailer()->emails[ 'WC_Admin_Email_Notifima' ];
+        $cust_mail  = WC()->mailer()->emails[ 'WC_Subscriber_Confirmation_Email_Notimifa' ];
 
         // Get additional email from global setting.
         $additional_email = Notifima()->setting->get_setting( 'additional_alert_email' );
@@ -334,7 +334,7 @@ class Subscriber {
         // Migration is over use custom subscription table for information
         $emails_data = $wpdb->get_results(
             $wpdb->prepare(
-                "SELECT id, email from {$wpdb->prefix}stockalert_subscribers
+                "SELECT id, email from {$wpdb->prefix}notifima_subscribers
                 WHERE product_id = %d AND status = %s",
                 [ $product_id, 'subscribed' ]
             )

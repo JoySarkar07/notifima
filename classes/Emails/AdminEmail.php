@@ -7,11 +7,11 @@ defined( 'ABSPATH' ) || exit; // Exit if accessed directly
 if ( ! class_exists( 'AdminEmail' ) ) :
 
 /**
- * Email to Admin for stock manager
+ * Email to Admin for notifima
  *
  * An email will be sent to the admin when customer subscribe an out of stock product.
  *
- * @class 		WC_Admin_Email_Stock_Manager
+ * @class 		WC_Admin_Email_Notifima
  * @version		1.3.0
  * @author 		WC Marketplace
  * @extends 	\WC_Email
@@ -29,7 +29,7 @@ class AdminEmail extends \WC_Email {
 	 * @return void
 	 */
 	function __construct() {		
-		$this->id 			= 'stock_manager_admin';
+		$this->id 			= 'notifima_admin';
 		$this->title 			= __( 'Alert admin', 'notifima' );
 		$this->description	= __( 'Admin will get an alert when customer subscribe any out of stock product', 'notifima' );
 		$this->template_html 	= 'emails/AdminEmail.php';

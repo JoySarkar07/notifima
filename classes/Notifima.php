@@ -7,8 +7,8 @@ use \Automattic\WooCommerce\Utilities\FeaturesUtil;
 class Notifima {
 
     private static $instance = null;
+    private $file            = '';
     private $container       = [];
-    private $file;
 
     /**
      * Class construct
@@ -24,6 +24,7 @@ class Notifima {
 
         $this->container[ 'version' ]        = NOTIFIMA_PLUGIN_VERSION;
         $this->container[ 'rest_namespace' ] = 'notifima/v1';
+        $this->container[ 'block_paths' ]    = [];
         
         add_action( 'init', [ $this, 'set_default_value' ] );
         // Activation Hooks
@@ -31,7 +32,7 @@ class Notifima {
         // Deactivation Hooks
         register_deactivation_hook( $file, [ $this, 'deactivate' ] );
 
-        add_filter( 'plugin_action_links_' . plugin_basename( $file ), [ &$this, 'stock_manager_settings' ] );
+        add_filter( 'plugin_action_links_' . plugin_basename( $file ), [ &$this, 'notifima_settings' ] );
         add_action( 'admin_notices', [ &$this, 'database_migration_notice' ] );
         add_filter( 'woocommerce_email_classes', [ &$this, 'setup_email_class' ] );
 
@@ -97,7 +98,8 @@ class Notifima {
      * @return void
      */
     public function activate() {
-        update_option( 'stock_manager_installed', 1 );
+        update_option( 'notifima_installed', 1 );
+        delete_option( 'stock_manager_installed');
         $this->set_default_value();
         $this->container[ 'install' ] = new Install();
     }
@@ -107,12 +109,12 @@ class Notifima {
      * @return void
      */
     public  function deactivate() {
-        if ( get_option( 'stock_manager_cron_start' ) ) {
-            wp_clear_scheduled_hook( 'stock_manager_start_notification_cron_job' );
-            delete_option( 'stock_manager_cron_start' );
+        if ( get_option( 'notifima_cron_start' ) ) {
+            wp_clear_scheduled_hook( 'notifima_start_notification_cron_job' );
+            delete_option( 'notifima_cron_start' );
         }
 
-        delete_option( 'stock_manager_installed' );
+        delete_option( 'notifima_installed' );
     }
 
     /**
@@ -151,6 +153,7 @@ class Notifima {
         $this->container[ 'admin' ]       = new Admin();
         $this->container[ 'restapi' ]     = new RestAPI();
         $this->container[ 'block' ]       = new Block();
+        $this->container[ 'frontendScripts' ] = new FrontendScripts();
     } 
 
     /**
@@ -158,9 +161,9 @@ class Notifima {
      * @return void
      */
     function setup_email_class( $emails ) {
-        $emails[ 'WC_Admin_Email_Stock_Manager' ] = new Emails\AdminEmail();
-        $emails[ 'WC_Subscriber_Confirmation_Email_Stock_Manager' ] = new Emails\SubscriberConfirmationEmail();
-        $emails[ 'WC_Email_Stock_Manager' ] = new Emails\Emails();
+        $emails[ 'WC_Admin_Email_Notifima' ] = new Emails\AdminEmail();
+        $emails[ 'WC_Subscriber_Confirmation_Email_Notimifa' ] = new Emails\SubscriberConfirmationEmail();
+        $emails[ 'WC_Email_Notifima' ] = new Emails\Emails();
         return $emails;
     } 
     
@@ -210,7 +213,7 @@ class Notifima {
     public static function woocommerce_admin_notice() {
         ?>
         <div id="message" class="error">
-            <p><?php printf(__('%sProduct Stock Manager & Notifier for WooCommerce is inactive.%s The %sWooCommerce plugin%s must be active for the Product Stock Manager & Notifier for WooCommerce to work. Please %sinstall & activate WooCommerce%s', 'notifima'), '<strong>', '</strong>', '<a target="_blank" href="http://wordpress.org/extend/plugins/woocommerce/">', '</a>', '<a href="' . admin_url('plugins.php') . '">', ' &raquo;</a>'); ?></p>
+            <p><?php printf(__('%sNotifima is inactive.%s The %sWooCommerce plugin%s must be active for the Notifima to work. Please %sinstall & activate WooCommerce%s', 'notifima'), '<strong>', '</strong>', '<a target="_blank" href="http://wordpress.org/extend/plugins/woocommerce/">', '</a>', '<a href="' . admin_url('plugins.php') . '">', ' &raquo;</a>'); ?></p>
         </div>
         <?php
     }
@@ -220,19 +223,19 @@ class Notifima {
      * @return void
      */
     public static function database_migration_notice() {
-        // check if plugin vertion in databse is not same to current stock manager version
-        $plugin_version = get_option( 'woo_stock_manager_version', '' );
+        // check if plugin vertion in databse is not same to current notifima version
+        $plugin_version = get_option( 'notifima_version', '' );
 
         if ( Install::is_migration_running() ) {
             ?>
             <div id="message" class="notice notice-warning">
-                <p><?php _e( "Product Stock Manager is currently updating the database in the background. Please be patient while the process completes.", 'notifima' ) ?></p>
+                <p><?php _e( "Notifima is currently updating the database in the background. Please be patient while the process completes.", 'notifima' ) ?></p>
             </div>
             <?php
         } else if ( $plugin_version != NOTIFIMA_PLUGIN_VERSION ) {
             ?>
             <div id="message" class="error">
-                <p><?php _e( "The Product Stock Manager & Notifier for WooCommerce is experiencing configuration issues. To ensure proper functioning, kindly deactivate and then activate the plugin.", 'notifima' ) ?></p>
+                <p><?php _e( "The Notifima is experiencing configuration issues. To ensure proper functioning, kindly deactivate and then activate the plugin.", 'notifima' ) ?></p>
             </div>
             <?php
         }
@@ -243,7 +246,7 @@ class Notifima {
      * @param mixed $links
      * @return array
      */
-    public static function stock_manager_settings( $links ) {
+    public static function notifima_settings( $links ) {
         $plugin_links = [ 
             '<a href="' . admin_url( 'admin.php?page=notifima#&tab=settings&subtab=general' ) . '">' . __( 'Settings', 'notifima' ) . '</a>', 
             '<a href="https://notifima.com/support/" target="_blank">' . __( 'Support', 'notifima' ) . '</a>', 

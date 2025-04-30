@@ -1,6 +1,6 @@
 <?php
 /**
- * Stock Manager Email
+ * Notifima Email
  *
  * @author 	  WC Marketplace
  * @version   1.3.0

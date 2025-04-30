@@ -186,7 +186,7 @@ class Admin {
         $tabs_names =[ 'appearance', 'form_submission', 'email', 'mailchimp' ];
 
         foreach( $tabs_names as $tab_name ) {
-            $settings_databases_value[ $tab_name ] = Notifima()->setting->get_option( 'woo_stock_manager_' . $tab_name . '_tab_settings' );
+            $settings_databases_value[ $tab_name ] = Notifima()->setting->get_option( 'notifima_' . $tab_name . '_settings' );
         }
         
         if ( get_current_screen()->id == 'toplevel_page_notifima' ) {
@@ -273,7 +273,7 @@ class Admin {
     } 
 
     /**
-     * Manage custom column for Stock Manager
+     * Manage custom column for Notifima
      */
     function display_subscriber_count_in_custom_column( $column_name, $post_id ) {
         if ( $column_name == 'product_subscriber' ) {
@@ -283,7 +283,7 @@ class Admin {
     } 
 
     /**
-     * Stock Manager news on Product edit page ( simple )
+     * Notifima news on Product edit page ( simple )
      */
     function display_product_subscriber_count_in_metabox() {
         global $post;
@@ -300,7 +300,7 @@ class Admin {
     }
 
     /**
-     * Stock Manager news on Product edit page ( variable )
+     * Notifima news on Product edit page ( variable )
      */
     function display_product_subscriber_count_in_variation_metabox( $loop, $variation_data, $variation ) {
         if ( Subscriber::is_product_outofstock( wc_get_product( $variation->ID ) ) ) {
@@ -317,8 +317,10 @@ class Admin {
     public function textdomain_relative_path($path, $url) {
 
         if (strpos($url, 'woocommerce-product-stock-alert') !== false) {   
-            if (strpos($url, 'block/stock-notification-block') !== false) {
-                $path = 'build/block/stock-notification-block/index.js';
+            foreach (Notifima()->block_paths as $key => $new_path) {
+                if (strpos($url, $key) !== false) {
+                    $path = $new_path;
+                }
             }
     
             if (strpos($url, 'block') === false) {

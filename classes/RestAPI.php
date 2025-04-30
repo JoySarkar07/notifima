@@ -25,7 +25,7 @@ class RestAPI
 
         register_rest_route( Notifima()->rest_namespace, '/stock-notification-form', [
             'methods' => 'GET',
-            'callback' => [ $this, 'render_stock_notification_form' ],
+            'callback' => [ $this, 'render_notifima_form' ],
             'permission_callback' => [ $this, 'notifima_permission' ],
         ] );
     }
@@ -48,7 +48,7 @@ class RestAPI
         $get_settings_data = $request->get_param( 'setting' );
         $settingsname = $request->get_param( 'settingName' );
         $settingsname = str_replace( "-", "_", $settingsname );
-        $optionname = 'woo_stock_manager_' . $settingsname . '_tab_settings';
+        $optionname = 'notifima_' . $settingsname . '_settings';
 
         // save the settings in database
         Notifima()->setting->update_option( $optionname, $get_settings_data );
@@ -60,7 +60,7 @@ class RestAPI
         return $all_details;
     }
 
-    public function render_stock_notification_form($request) {
+    public function render_notifima_form($request) {
         $product_id = $request->get_param('product_id');
 
         // Start output buffering

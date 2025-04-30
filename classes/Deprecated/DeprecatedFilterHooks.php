@@ -5,7 +5,7 @@ namespace Notifima\Deprecated;
 /**
  * Deprecated action hooks
  *
- * @package Stock Manager
+ * @package Notifima
  */
 
 defined( 'ABSPATH' ) || exit;

@@ -32,8 +32,8 @@ interface HeaderType {
 
 const Managestock:React.FC = () => {
   const updateDataUrl = `${ appLocalizer.apiUrl }/notifima/v1/update-product`;
-  const fetchDataUrl   = `${appLocalizer.apiUrl}/notifima/v1/get-products`;
-  const segmentDataUrl = `${appLocalizer.apiUrl}/notifima/v1/all-products`;
+  const fetchDataUrl   = `${appLocalizer.apiUrl}/notifima/v1/products`;
+  const segmentDataUrl = `${appLocalizer.apiUrl}/notifima/v1/products`;
   const [data, setData] = useState<DataType[] | null>(null);
   const [headers, setHeaders] = useState([]);
   const [totalProducts, setTotalProducts] = useState();
@@ -61,10 +61,13 @@ const Managestock:React.FC = () => {
   useEffect(() => {
     if (!appLocalizer.khali_dabba) return;
     axios({
-      method: "post",
+      method: "GET",
       url: segmentDataUrl,
       headers: { "X-WP-Nonce": appLocalizer.nonce },
-      data: { segment: true },
+      params: { 
+        segment: true,
+        action: 'segment'
+      },
     }).then((response) => {
       setSegments(response.data);
     });
@@ -80,10 +83,10 @@ const Managestock:React.FC = () => {
     setData(null);
     //Fetch the data to show in the table
     axios({
-      method: "post",
+      method: "GET",
       url: fetchDataUrl,
       headers: { "X-WP-Nonce": appLocalizer.nonce },
-      data: {
+      params: {
         page: currentPage + 1,
         row: rowsPerPage,
         product_name: searchType == 'productName' ? searchValue: null,

@@ -24,10 +24,16 @@ class Install {
      * @var bool | null
      */
     public static $migration_running = null;
+    public static $appearance_settings = [];
+    public static $submit_settings = [];
+    public static $email_settings = [];
+
     
     public function __construct() {
         $this->create_database_table();
         $this->start_cron_job();
+
+        $this->set_default_settings();
     }
 
     /**
@@ -36,7 +42,7 @@ class Install {
      */
     public static function is_migration_running() {
         if ( self::$migration_running === null ) {
-            self::$migration_running = get_option( 'stock_manager_migration_running', false );
+            self::$migration_running = get_option( 'notifima_migration_running', false );
         }
 
         return self::$migration_running;
@@ -48,7 +54,7 @@ class Install {
      */
     public static function subscriber_migration() {
         global $wpdb;
-        self::stock_manager_data_migrate();
+        self::notifima_data_migrate();
 
         try {
             // Get woosubscribe post and post meta
@@ -86,7 +92,7 @@ class Install {
                 $VALUES = substr( $VALUES, 0, -1 );
 
                 $wpdb->query(
-                    "INSERT IGNORE INTO {$wpdb->prefix}stockalert_subscribers (product_id, user_id, email, status, create_time ) VALUES {$VALUES} "
+                    "INSERT IGNORE INTO {$wpdb->prefix}notifima_subscribers (product_id, user_id, email, status, create_time ) VALUES {$VALUES} "
                 );
             }
 
@@ -98,7 +104,7 @@ class Install {
             // Get subscriber count
             $subscriber_counts = $wpdb->get_results(
                 $wpdb->prepare(
-                    "SELECT product_id, COUNT(*) as count from {$wpdb->prefix}stockalert_subscribers
+                    "SELECT product_id, COUNT(*) as count from {$wpdb->prefix}notifima_subscribers
                     WHERE status = %s
                     GROUP BY product_id",
                     [ 'subscribed' ]
@@ -110,7 +116,7 @@ class Install {
                 update_post_meta( $count_data->product_id, 'no_of_subscribers', $count_data->count );
             }
 
-            delete_option( 'stock_manager_migration_running' );
+            delete_option( 'notifima_migration_running' );
             self::$migration_running = null;
 
         } catch ( \Exception $e ) {
@@ -132,7 +138,7 @@ class Install {
         }
 
         $wpdb->query(
-            "CREATE TABLE IF NOT EXISTS `" . $wpdb->prefix . "stockalert_subscribers` (
+            "CREATE TABLE IF NOT EXISTS `" . $wpdb->prefix . "notifima_subscribers` (
                 `id` bigint(20) NOT NULL AUTO_INCREMENT,
                 `product_id` bigint(20) NOT NULL,
                 `user_id` bigint(20) NOT NULL DEFAULT 0,
@@ -143,6 +149,7 @@ class Install {
                 PRIMARY KEY (`id`)
             ) $collate;"
         );
+
     }
 
     /**
@@ -151,9 +158,9 @@ class Install {
      */
     private function start_cron_job() {
         // Migrate subscriber data from post table
-        wp_clear_scheduled_hook( 'stock_manager_start_subscriber_migration' );
-        wp_schedule_single_event( time(), 'stock_manager_start_subscriber_migration' );
-        update_option( 'stock_manager_migration_running', true );
+        wp_clear_scheduled_hook( 'notifima_start_subscriber_migration' );
+        wp_schedule_single_event( time(), 'notifima_start_subscriber_migration' );
+        update_option( 'notifima_migration_running', true );
 
         // If corn is disabled
         if ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) {
@@ -161,23 +168,14 @@ class Install {
         }
 
         // Notify user if product is instock
-        wp_clear_scheduled_hook( 'stock_manager_start_notification_cron_job' );
-        wp_schedule_event( time(), 'hourly', 'stock_manager_start_notification_cron_job' );
-        update_option( 'stock_manager_cron_start', true );
+        wp_clear_scheduled_hook( 'notifima_start_notification_cron_job' );
+        wp_schedule_event( time(), 'hourly', 'notifima_start_notification_cron_job' );
+        update_option( 'notifima_cron_start', true );
     }
 
-    /**
-     * Data migration function. Run on installation time.
-     * @return void
-     */
-    private static function stock_manager_data_migrate() {
-
-        $current_version = Notifima()->version;
-        $previous_version = get_option( "woo_stock_manager_version", "" );
-
+    private function set_default_settings() {
         // Default messages for settings array.
-        // Those will modify if previous settings was set.
-        $appearance_settings = [
+        $this->appearance_settings = [
             'is_enable_backorders' => false, 
             'is_enable_no_interest' => false, 
             'is_double_optin' => false, 
@@ -195,17 +193,36 @@ class Install {
             'alert_text_color' => Notifima()->default_value['alert_text_color'], 
             'customize_btn' => Notifima()->default_value['customize_btn']
         ];
-        $submit_settings = [
+
+        update_option( 'notifima_appearance_settings', $this->appearance_settings );
+
+        $this->submit_settings = [
             'alert_success'  => Notifima()->default_value['alert_success'], 
             'alert_email_exist' => Notifima()->default_value['alert_email_exist'], 
             'valid_email' => Notifima()->default_value['valid_email'], 
             // Translators: This message display user sucessfully unregistered
             'alert_unsubscribe_message' => Notifima()->default_value['alert_unsubscribe_message'],
         ];
-        $email_settings = [
+
+        update_option( 'notifima_form_submission_settings', $this->submit_settings );
+
+        $this->email_settings = [
             'ban_email_domain_text' => Notifima()->default_value['ban_email_domain_text'], 
             'ban_email_address_text' => Notifima()->default_value['ban_email_address_text']
         ];
+
+        update_option( 'notifima_email_settings', $this->email_settings );
+
+    }
+
+    /**
+     * Data migration function. Run on installation time.
+     * @return void
+     */
+    private static function notifima_data_migrate() {
+        global $wpdb;
+        $current_version = Notifima()->version;
+        $previous_version = get_option("notifima_version", "") != "" ? get_option( "woo_stock_manager_version", "" ) : get_option("notifima_version");        
 
         if ( version_compare( $previous_version, '2.5.0', '<' ) ) {
             // Used to check the plugin version before 2.1.0
@@ -290,13 +307,13 @@ class Install {
                 );
                 
                 // Replace all default value by previous settings.
-                foreach( $appearance_settings as $key => $value ) {
+                foreach( self::$appearance_settings as $key => $value ) {
                     if ( isset( $tab_settings[ $key ] ) && $tab_settings[ $key ] != '' ) {
                         $appearance_settings[ $key ] = $tab_settings[ $key ];
                     }
                 }
 
-                foreach( $submit_settings as $key => $value ) {
+                foreach( self::$submit_settings as $key => $value ) {
                     if ( isset( $tab_settings[ $key ] ) && $tab_settings[ $key ] != '' ) {
                         $submit_settings[ $key ] = $tab_settings[ $key ];
                     }
@@ -309,23 +326,23 @@ class Install {
             }
             
             if ( version_compare( $previous_version, '2.4.2', '==' ) ) {
-                $appearance_settings = get_option( 'woo_stock_manager_general_tab_settings', null ) ?? $appearance_settings;
-                $submit_settings     = get_option( 'woo_stock_manager_form_submission_tab_settings', null ) ?? $submit_settings;
-                $email_settings      = get_option( 'woo_stock_manager_email_tab_settings', null ) ?? $email_settings;
+                self::$appearance_settings = get_option( 'woo_stock_manager_general_tab_settings', null ) ?? $appearance_settings;
+                self::$submit_settings     = get_option( 'woo_stock_manager_form_submission_tab_settings', null ) ?? $submit_settings;
+                self::$email_settings      = get_option( 'woo_stock_manager_email_tab_settings', null ) ?? $email_settings;
             }
 
             // Get customization_tab_setting and merge with general setting
             $customization_tab_setting = get_option( 'woo_stock_manager_form_customization_tab_settings', [] );
-            $appearance_settings = array_merge( $appearance_settings, $customization_tab_setting );
+            self::$appearance_settings = array_merge( self::$appearance_settings, $customization_tab_setting );
             delete_option( 'woo_stock_manager_form_customization_tab_settings' );
         }
          
         if ( version_compare( $previous_version, '2.5.5', '<=' ) ) {
-            $appearance_settings['is_guest_subscriptions_enable'] = ['is_guest_subscriptions_enable'];
+            self::$appearance_settings['is_guest_subscriptions_enable'] = ['is_guest_subscriptions_enable'];
         }
 
         if ( version_compare( $previous_version, '2.5.12', '<=' ) ) {
-            $appearance_settings['lead_time_format'] = 'static';
+            self::$appearance_settings['lead_time_format'] = 'static';
         }
 
         
@@ -334,7 +351,7 @@ class Install {
         $previous_email_settings        = get_option( 'woo_stock_manager_email_tab_settings', [] );
         
         if ( version_compare( $previous_version, '2.5.14', '<=' ) ) {
-            $appearance_settings['customize_btn'] = [
+            self::$appearance_settings['customize_btn'] = [
                 'button_background_color'           => $previous_appearance_settings['button_background_color'] ?? '',
                 'button_text_color'                 => $previous_appearance_settings['button_text_color'] ?? '',
                 'button_border_color'               => $previous_appearance_settings['button_border_color'] ?? '',
@@ -368,10 +385,63 @@ class Install {
 
         }
 
-        update_option( 'woo_stock_manager_appearance_tab_settings', array_merge($appearance_settings, $previous_appearance_settings) );
-        update_option( 'woo_stock_manager_form_submission_tab_settings', array_merge($submit_settings, $previous_submit_settings) );
-        update_option( 'woo_stock_manager_email_tab_settings', array_merge($email_settings, $previous_email_settings) );
+        update_option( 'woo_stock_manager_appearance_tab_settings', array_merge(self::$appearance_settings, $previous_appearance_settings) );
+        update_option( 'woo_stock_manager_form_submission_tab_settings', array_merge(self::$submit_settings, $previous_submit_settings) );
+        update_option( 'woo_stock_manager_email_tab_settings', array_merge(self::$email_settings, $previous_email_settings) );
        
-        update_option( 'woo_stock_manager_version', $current_version );
+        if ( version_compare( $previous_version, '3.0.0', '<=' ) ) {
+            $wpdb->query(
+                "ALTER TABLE `{$wpdb->prefix}stockalert_subscribers` RENAME TO `{$wpdb->prefix}notifima_subscribers`"
+            );
+
+            $previous_appearance_settings = get_option( 'woo_stock_manager_appearance_tab_settings', [] );
+            $previous_submit_settings = get_option( 'woo_stock_manager_form_submission_tab_settings', [] );
+            $previous_email_settings = get_option( 'woo_stock_manager_email_tab_settings', [] );
+            $previous_mailchimp_settings = get_option( 'woo_stock_manager_mailchimp_tab_settings', [] );
+
+            update_option( 'notifima_appearance_settings', $previous_appearance_settings );
+            update_option( 'notifima_form_submission_settings', $previous_submit_settings );
+            update_option( 'notifima_email_settings', $previous_email_settings );
+            update_option( 'notifima_mailchimp_settings', $previous_mailchimp_settings );
+
+            $version_key = get_option( "woo_stock_manager_version", "" );
+            update_option( 'notifima_version', $version_key );
+
+            delete_option('woo_stock_manager_appearance_tab_settings');
+            delete_option('woo_stock_manager_form_submission_tab_settings');
+            delete_option('woo_stock_manager_email_tab_settings');
+            delete_option('woo_stock_manager_mailchimp_tab_settings');
+            delete_option('woo_stock_manager_version');
+
+            //Shortcode migration
+            $shortcodes_to_replace = [
+                '[display_stock_manager_form' => '[notifima_subscription_form',
+                '[display_stock_alert_form'  => '[notifima_subscription_form',
+            ];
+        
+            $posts = $wpdb->get_results(
+                "SELECT ID, post_content FROM {$wpdb->posts} 
+                 WHERE post_content LIKE '%display_stock_manager_form%' 
+                 OR post_content LIKE '%display_stock_alert_form%'"
+            );
+        
+            foreach ( $posts as $post ) {
+                $updated_content = $post->post_content;
+        
+                foreach ( $shortcodes_to_replace as $old => $new ) {
+                    $updated_content = str_replace($old, $new, $updated_content);
+                }
+        
+                if ( $updated_content !== $post->post_content ) {
+                    wp_update_post([
+                        'ID' => $post->ID,
+                        'post_content' => $updated_content,
+                    ]);
+                }
+            }
+        
+        }
+
+        update_option( 'notifima_version', $current_version );
     }
 }

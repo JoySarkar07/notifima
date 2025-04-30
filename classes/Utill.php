@@ -10,7 +10,7 @@ class Utill {
      * Function to console and debug errors.
      */
     public static function log( $str ) {
-        $file = Notifima()->plugin_path . 'log/woo-notifima.log';
+        $file = Notifima()->plugin_path . 'log/notifima.log';
 
         if ( file_exists( $file ) ) {
             // Open the file to get existing content
@@ -86,10 +86,9 @@ class Utill {
      * @return bool
      */
     public static function is_khali_dabba() {
-        // if ( defined( 'NOTIFIMA_PRO_PLUGIN_VERSION' ) ) {
-		// 	return Notifima_Pro()->license->is_active();
-		// }
-        // return false;
-        return true;
+        if ( defined( 'NOTIFIMA_PRO_PLUGIN_VERSION' ) ) {
+			return Notifima_Pro()->license->is_active();
+		}
+        return false;
     }
 }

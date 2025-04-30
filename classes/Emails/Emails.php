@@ -7,11 +7,11 @@ defined( 'ABSPATH' ) || exit; // Exit if accessed directly
 if ( ! class_exists( 'Emails' ) ) :
 
 /**
- * Email for stock manager
+ * Email for Notifima
  *
  * An email will be sent to the customer when their subscribed product is available.
  *
- * @class 		WC_Email_Stock_Manager
+ * @class 		WC_Email_Notifima
  * @version		1.3.0
  * @author 		WC Marketplace
  * @extends 	\WC_Email
@@ -29,7 +29,7 @@ class Emails extends \WC_Email {
 	 */
 	function __construct() {
 
-		$this->id 			= 'stock_manager';
+		$this->id 			= 'notifima';
 		$this->title 			= __( 'Alert Subscriber', 'notifima' );
 		$this->description	= __( 'Alert customer when their subscribed product becomes in stock', 'notifima' );
 		$this->template_html 	= 'emails/Email.php';

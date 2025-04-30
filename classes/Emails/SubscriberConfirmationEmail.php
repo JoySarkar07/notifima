@@ -7,7 +7,7 @@ defined( 'ABSPATH' ) || exit; // Exit if accessed directly
 if ( ! class_exists( 'SubscriberConfirmationEmail' ) ) :
 
 /**
- * Email for stock manager
+ * Email for Notifima
  *
  * An confirmation email will be sent to the customer when they subscribe product.
  *
@@ -28,7 +28,7 @@ class SubscriberConfirmationEmail extends \WC_Email {
 	 * @return void
 	 */
 	function __construct() {		
-		$this->id 			= 'stock_manager_subscriber_confirmation';
+		$this->id 			= 'notifima_subscriber_confirmation';
 		$this->title 			= __( 'Confirm subscriber', 'notifima' );
 		$this->description	= __( 'Confirm customer when they subscribe a product', 'notifima' );
 		$this->template_html 	= 'emails/SubscriberConfirmationEmail.php';

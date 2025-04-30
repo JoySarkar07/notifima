@@ -1,6 +1,6 @@
 <?php
 /**
- * Stock Manager Email Subscriber Confirmation
+ * Notifima Email Subscriber Confirmation
  *
  * @author 	  WC Marketplace
  * @version   1.3.0
@@ -46,5 +46,5 @@ $is_prices_including_tax = get_option( 'woocommerce_prices_include_tax' );
 </p>
 
 </p>
-<?php do_action( 'stock_manager_email_footer' , $product->get_id(), $customer_email );
+<?php do_action( 'notifima_email_footer' , $product->get_id(), $customer_email );
 do_action( 'woocommerce_email_footer' ); 

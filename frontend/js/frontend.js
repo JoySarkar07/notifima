@@ -26,7 +26,7 @@ jQuery(function ($) {
          * Subscriber form dom objects
          * @var {object} dom objects
          */
-        let form = $(this).closest( '.stock-notifier-subscribe-form' );
+        let form = $(this).closest( '.notifima-subscribe-form' );
 
         // Set button as processing and disable click event.
         $(this).text(localizeData.processing);
@@ -112,7 +112,7 @@ jQuery(function ($) {
 
             // Add additional fields data 
             localizeData.additional_fields.forEach(element => {
-                requestData[element] = $('#stock_manager_' + element).val();
+                requestData[element] = $('#notifima_' + element).val();
             });
 
             // Request for subscription
@@ -193,10 +193,10 @@ jQuery(function ($) {
     function getVariationSubscribeForm() {
 
         const variationId = Number($(this).val());
-        const productId   = Number($('.stock-notifier-shortcode-subscribe-form').data('product-id'));
+        const productId   = Number($('.notifima-shortcode-subscribe-form').data('product-id'));
 
         // Subscription form exist and variation id exist
-        if ($('.stock-notifier-shortcode-subscribe-form').length && variationId) {
+        if ($('.notifima-shortcode-subscribe-form').length && variationId) {
 
             // Request body for subscription form
             const subscriptionFormRequest = {
@@ -210,12 +210,12 @@ jQuery(function ($) {
             $.post( localizeData.ajax_url, subscriptionFormRequest, function ( response ) {
 
                 // Set subscription form as inner-html
-                $('.stock-notifier-shortcode-subscribe-form').html( response );
+                $('.notifima-shortcode-subscribe-form').html( response );
             });
         }
         else {
             // Variation not exist.
-            $('.stock-notifier-shortcode-subscribe-form').html("");
+            $('.notifima-shortcode-subscribe-form').html("");
         }
     }
 
