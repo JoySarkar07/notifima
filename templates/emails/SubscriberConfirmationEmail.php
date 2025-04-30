@@ -1,14 +1,19 @@
 <?php
 /**
- * Notifima Email Subscriber Confirmation
+ * Notifima Subscription Confirmation Email
+ * 
+ * Override this template by copying it to yourtheme/woocommerce-product-stock-alert/emails/SubscriberConfirmationEmail.php
  *
- * @author 	  WC Marketplace
+ * @author    MultiVendorX
+ * @package   woocommerce-product-stock-alert/templates
  * @version   1.3.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
+do_action( 'woocommerce_email_header', $args['email_heading'], $email ); 
+$product = $args['product'];
+?>
 
 <p><?php printf( esc_html__( "Hi there. You have successfully subscribed to a product. We will inform you when the product becomes available. Product details are shown below for your reference:", 'notifima' ) );
 
@@ -42,9 +47,9 @@ $is_prices_including_tax = get_option( 'woocommerce_prices_include_tax' );
 <h3><?php esc_html_e( 'Customer Details', 'notifima' ); ?></h3>
 <p>
 	<strong><?php esc_html_e( 'Email', 'notifima' ); ?> : </strong>
-	<a target="_blank" href="mailto:<?php echo esc_html( $customer_email ); ?>"><?php echo esc_html( $customer_email ); ?></a>
+	<a target="_blank" href="mailto:<?php echo esc_html( $args['customer_email'] ); ?>"><?php echo esc_html($args['customer_email'] ); ?></a>
 </p>
 
 </p>
-<?php do_action( 'notifima_email_footer' , $product->get_id(), $customer_email );
+<?php do_action( 'notifima_subscriber_confirmation_email_footer' , $product->get_id(), $args['customer_email'] );
 do_action( 'woocommerce_email_footer' ); 

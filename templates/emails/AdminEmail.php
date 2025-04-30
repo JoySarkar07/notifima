@@ -1,15 +1,19 @@
 <?php
 /**
- * Notifima Email
+ * Notifima Email Admin Email
+ * 
+ * Override this template by copying it to yourtheme/woocommerce-product-stock-alert/emails/AdminEmail.php
  *
- * @author 	  WC Marketplace
+ * @author    MultiVendorX
+ * @package   woocommerce-product-stock-alert/templates
  * @version   1.3.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
-
+do_action( 'woocommerce_email_header', $args['email_heading'], $email );
+$product = $args['product'];
+?>
 
 <p><?php printf( esc_html__( "Hi there. A customer has subscribed to a product on your shop. Product details are shown below for your reference:", 'notifima' ) ); ?></p>
 <?php
@@ -43,7 +47,7 @@ $is_prices_including_tax = get_option( 'woocommerce_prices_include_tax' );
 <h3><?php esc_html_e( 'Customer Details', 'notifima' ); ?></h3>
 <p>
 	<strong><?php esc_html_e( 'Email', 'notifima' ); ?> : </strong>
-	<a target="_blank" href="mailto:<?php echo esc_html( $customer_email ); ?>"><?php echo esc_html( $customer_email ); ?></a>
+	<a target="_blank" href="mailto:<?php echo esc_html( $args['customer_email'] ); ?>"><?php echo esc_html( $args['customer_email'] ); ?></a>
 </p>
 
 <?php do_action( 'woocommerce_email_footer' );

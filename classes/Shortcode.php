@@ -23,11 +23,11 @@ class Shortcode {
         ob_start();
         $product_id = isset( $attr['product_id'] ) ? (int)$attr['product_id'] : 0;
 
-        do_action( 'notifima_form_before' );
+        do_action( 'notifima_before_subscription_form' );
 
         Notifima()->frontend->display_product_subscription_form($product_id);
 
-        do_action( 'notifima_form_after' );
+        do_action( 'notifima_after_subscription_form' );
 
         return ob_get_clean();
     }

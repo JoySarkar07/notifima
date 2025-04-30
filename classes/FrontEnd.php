@@ -152,7 +152,7 @@ class FrontEnd {
         } 
         $notifima_fields_array = [];
         $notifima_fields_html = $user_email = '';
-        $separator = apply_filters( 'notifima_form_fileds_separator', '<br>' );
+        $separator = apply_filters( 'notifima_subscription_form_fields_separator', '<br>' );
         $settings_array = Utill::get_form_settings_array();
         $button_settings = $settings_array[ 'customize_btn' ];
 
@@ -161,7 +161,7 @@ class FrontEnd {
             $user_email = $current_user->data->user_email;
         } 
         $placeholder = $settings_array[ 'email_placeholder_text' ];
-        $alert_fields = apply_filters( 'notifima_fileds_array', [ 
+        $alert_fields = apply_filters( 'notifima_add_fields_in_subscription_form', [ 
             'alert_email' => [ 
                 'type' => 'text', 
                 'class'=> 'notifima-email', 

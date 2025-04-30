@@ -53,7 +53,7 @@ class RestAPI
         // save the settings in database
         Notifima()->setting->update_option( $optionname, $get_settings_data );
 
-        do_action( 'notifima_settings_after_save', $settingsname, $get_settings_data );
+        do_action( 'notifima_after_save_settings', $settingsname, $get_settings_data );
 
         $all_details[ 'error' ] = __( 'Settings Saved', 'notifima' );
 

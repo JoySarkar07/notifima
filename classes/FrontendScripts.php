@@ -91,7 +91,7 @@ class FrontendScripts {
                 'data' => [
                     'ajax_url' => admin_url( 'admin-ajax.php', 'relative' ), 
                     'nonce'  => wp_create_nonce( 'notifima-security-nonce' ), 
-                    'additional_fields' => apply_filters( 'notifima_form_additional_fields', [] ), 
+                    'additional_fields' => apply_filters( 'notifima_subscription_form_additional_fields', [] ), 
                     'button_html' => $subscribe_button_html, 
                     'alert_success' => $settings_array[ 'alert_success' ], 
                     'alert_email_exist' => $settings_array[ 'alert_email_exist' ], 

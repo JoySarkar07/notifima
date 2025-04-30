@@ -91,4 +91,28 @@ class Utill {
 		}
         return false;
     }
+
+    /**
+     * Get other templates ( e.g. product attributes ) passing attributes and including the file.
+     *
+     * @access public
+     * @param mixed $template_name
+     * @param array $args ( default: array() )
+     * @return void
+     */
+    public static function get_template( $template_name, $args = [] ) {
+        
+        if ( $args && is_array( $args ) ) {
+            extract( $args );
+        }
+    
+        // Check if the template exists in the theme
+        $theme_template = get_stylesheet_directory() . '/woocommerce-product-stock-alert/' . $template_name;
+    
+        // Use the theme template if it exists, otherwise use the plugin template
+        $located = file_exists( $theme_template ) ? $theme_template : Notifima()->plugin_path . 'templates/' . $template_name;
+    
+        // Load the template
+        load_template( $located, false, $args );
+    }
 }

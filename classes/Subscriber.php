@@ -304,7 +304,7 @@ class Subscriber {
             $vendor = get_mvx_product_vendors( $product->get_id() );
 
             // Append vendor's email as additional email.
-            if ( $vendor && apply_filters( 'notifima_add_vendor', true ) ) {
+            if ( $vendor && apply_filters( 'notifima_add_vendor_email_in_subscriber_email', true ) ) {
                 $additional_email .= ', '. sanitize_email( $vendor->user_data->user_email );  
             } 
         }

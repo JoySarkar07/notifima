@@ -243,7 +243,7 @@ class Admin {
                 '1.0.0',
                 true
             );
-            wp_localize_script( 'notifima-script', 'appLocalizer', apply_filters( 'notifima_settings', [ 
+            wp_localize_script( 'notifima-script', 'appLocalizer', apply_filters( 'notifima_admin_localize_scripts', [ 
                 'apiUrl'                    => untrailingslashit( get_rest_url() ),
                 'restUrl'                   => Notifima()->rest_namespace,
                 'nonce'                     => wp_create_nonce( 'wp_rest' ),
