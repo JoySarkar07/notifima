@@ -1,7 +1,7 @@
 // // import React from 'react'
 import { CustomTable, TableCell } from "zyra";
 // import types from customtable zyra
-import type { Subscriber, FilterData }  from "zyra";
+import type { Subscriber }  from "zyra";
 import Popup from "../Popup/Popup";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { ReactNode, useEffect, useRef, useState } from "react";
@@ -24,6 +24,16 @@ type SubscriberResponse = {
   subscribed: number;
   unsubscribed: number;
   mailsent: number;
+}
+
+type FilterData = {
+  searchField?: string;
+  searchAction?: string;
+  date?:{
+    start_date: Date;
+    end_date: Date;
+  }
+  typeCount?: string;
 }
 
 export interface RealtimeFilter {

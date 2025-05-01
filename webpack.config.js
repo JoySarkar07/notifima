@@ -54,43 +54,44 @@ module.exports = {
     rules: [
       {
         test: /\.tsx?$/,
-        use: 'ts-loader',  // If you need specific TS handling, otherwise can rely on Babel
+        use: 'ts-loader',
         include: path.resolve(__dirname, './src'),
       },
       {
         test: /\.css$/,
         use: [
-          'style-loader', // Injects CSS into the DOM
-          'css-loader',   // Resolves CSS imports
+          'style-loader',
+          'css-loader',
         ],
         include: /node_modules/,
       },
       {
-        test: /\.(png|jpg|jpeg|gif)$/i,
-        use: [
-          {
-            loader: 'file-loader', // Handles image files
-            options: {
-              name: '[name].[hash].[ext]', // Customize output file name and include a hash for cache busting
-              outputPath: 'assets/images/', // Place images in the assets/images directory
-            },
-          },
-        ],
+        test: /\.(png|jpe?g|gif|svg)$/i,
+        type: 'asset/resource', // ✅ Replace file-loader with Webpack 5's built-in handling
+        generator: {
+          filename: 'assets/images/[name][hash][ext]', // ✅ Output folder and name pattern
+        },
       },
       {
         test: /\.scss$/,
         use: [
-          'style-loader', // Injects styles into the DOM
-          'css-loader',   // Resolves CSS imports
+          'style-loader',
           {
-            loader: 'postcss-loader', // (Optional) For autoprefixing and other PostCSS features
+            loader: 'css-loader',
+            options: {
+              url: true, // ✅ Ensures `url()` in SCSS is processed
+              importLoaders: 2,
+            },
+          },
+          {
+            loader: 'postcss-loader',
             options: {
               postcssOptions: {
                 plugins: [require('autoprefixer')],
               },
             },
           },
-          'sass-loader', // Compiles SCSS to CSS
+          'sass-loader',
         ],
         include: path.resolve(__dirname, './src'),
       },
@@ -99,6 +100,9 @@ module.exports = {
 
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
+    alias: {
+      '@': path.resolve(__dirname, './src'), // So you can use "@/assets/..." in SCSS or imports
+    },
   },
 
   externals: {

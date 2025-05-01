@@ -4,33 +4,38 @@ import { CSVLink } from "react-csv";
 import { __ } from '@wordpress/i18n';
 import { Link } from 'react-router-dom';
 import "./importExport.scss";
+import { StockDataType } from '../Managestock';
 
+
+export interface ImportExportStockDataType {
+  backorders: string;
+  id: string;
+  image: string;
+  link: string;
+  manage_stock: string;
+  name: string;
+  regular_price: string;
+  sale_price: string;
+  sku: string;
+  stock_quantity: string | number;
+  stock_status: string;
+  subscriber_no: string;
+  type: string;
+}
 // Define types
-interface Product {
-    id: number;
-    type: string;
-    sku: string;
-    name: string;
-    manage_stock: boolean;
-    stock_status: string;
-    backorders: string;
-    stock_quantity: number;
-    [key: string]: any; // In case there are extra fields
-  }
-  
   interface CheckboxItem {
     name: string;
-    value: keyof Product;
+    value: keyof StockDataType;
     checked: boolean;
   }
 
   interface HeaderItem {
     label: string;
-    key: keyof Product;
+    key: keyof StockDataType;
   }
 
 const Export = () => {
-    const [data, setData] = useState<Product[]>([]);
+    const [data, setData] = useState<StockDataType[]>([]);
     const [selectAll, setSelectAll] = useState<boolean>(true);
     const [checkboxData, setCheckboxData] = useState<CheckboxItem[]>([
     { name: 'Id',           value: 'id',             checked: true },
@@ -50,7 +55,7 @@ const Export = () => {
         url: `${appLocalizer.apiUrl}/notifima/v1/all-products`,
         headers: { 'X-WP-Nonce': appLocalizer.nonce },
         }).then((response) => {
-        const parsedData: Product[] = Object.values(JSON.parse(response.data));
+        const parsedData: StockDataType[] = Object.values(JSON.parse(response.data));
         setData(parsedData);
         }).catch((error) => {
         console.error('Error fetching data:', error);
@@ -69,7 +74,7 @@ const Export = () => {
       };
       
       // For getData
-      const getData = (): Array<Omit<Product, 'manage_stock'> & { manage_stock: string }> => {
+      const getData = (): ImportExportStockDataType[] => {
         return data.map((row) => {
           return {
             ...row,
@@ -79,7 +84,7 @@ const Export = () => {
         });
       };
 
-      const handleCheck = (e: React.ChangeEvent<HTMLInputElement>, name: string, value: keyof Product): void => {
+      const handleCheck = (e: React.ChangeEvent<HTMLInputElement>, name: string, value: keyof StockDataType): void => {
         console.log(name, value);
         setCheckboxData((prevCheckboxData) =>
           prevCheckboxData.map((checkbox) =>
