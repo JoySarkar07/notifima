@@ -7,13 +7,13 @@ defined( 'ABSPATH' ) || exit; // Exit if accessed directly
 if ( ! class_exists( 'AdminEmail' ) ) :
 
 /**
- * Email to Admin for stock manager
+ * Email to Admin for notifima
  *
  * An email will be sent to the admin when customer subscribe an out of stock product.
  *
- * @class 		WC_Admin_Email_Stock_Manager
+ * @class 		WC_Admin_Email_Notifima
  * @version		1.3.0
- * @author 		WC Marketplace
+ * @author 		MultivendorX
  * @extends 	\WC_Email
  */
 class AdminEmail extends \WC_Email {
@@ -29,7 +29,7 @@ class AdminEmail extends \WC_Email {
 	 * @return void
 	 */
 	function __construct() {		
-		$this->id 			= 'stock_manager_admin';
+		$this->id 			= 'notifima_subscriber_confimation_admin';
 		$this->title 			= __( 'Alert admin', 'notifima' );
 		$this->description	= __( 'Admin will get an alert when customer subscribe any out of stock product', 'notifima' );
 		$this->template_html 	= 'emails/AdminEmail.php';
@@ -66,7 +66,7 @@ class AdminEmail extends \WC_Email {
 	 * @return string
 	 */
 	public function get_default_subject() {
-		return apply_filters( 'woocommerce_email_subject_notifima', __( 'A Customer has subscribed to a product on {site_title} ', 'notifima' ), $this->object );
+		return apply_filters( 'notifima_customer_subscription_admin_email_subject', __( 'A Customer has subscribed to a product on {site_title} ', 'notifima' ), $this->object );
 	} 
 
 	/**
@@ -76,7 +76,7 @@ class AdminEmail extends \WC_Email {
 	 * @return string
 	 */
 	public function get_default_heading() {
-		return apply_filters( 'woocommerce_email_heading_notifima', __( 'Welcome to {site_title} ', 'notifima' ), $this->object );
+		return apply_filters( 'notifima_customer_subscription_admin_email_heading', __( 'Welcome to {site_title} ', 'notifima' ), $this->object );
 	} 
 
 	/**
@@ -87,14 +87,14 @@ class AdminEmail extends \WC_Email {
 	 */
 	function get_content_html() {
 		ob_start();
-		wc_get_template( $this->template_html, [
+		Notifima()->util->get_template($this->template_html, [
 			'email_heading' => $this->get_heading(), 
 			'product' 		=> $this->product, 
 			'customer_email'=> $this->customer_email, 
 			'sent_to_admin' => true, 
 			'plain_text' 	=> false, 
 			'email'			=> $this, 
-		 ], '', $this->template_base );
+		]);
 		return ob_get_clean();
 	} 
 
@@ -106,13 +106,14 @@ class AdminEmail extends \WC_Email {
 	 */
 	function get_content_plain() {
 		ob_start();
-		wc_get_template( $this->template_plain, [ 
-			'email_heading'  => $this->get_heading(), 
-			'product' 		 => $this->product, 
-			'customer_email' => $this->customer_email, 
-			'sent_to_admin'  => true, 
-			'plain_text'     => true
-		 ], '', $this->template_base );
+		Notifima()->util->get_template($this->template_plain, [
+			'email_heading' => $this->get_heading(), 
+			'product' 		=> $this->product, 
+			'customer_email'=> $this->customer_email, 
+			'sent_to_admin' => true, 
+			'plain_text' 	=> false, 
+			'email'			=> $this, 
+		]);
 		return ob_get_clean();
 	} 
 	

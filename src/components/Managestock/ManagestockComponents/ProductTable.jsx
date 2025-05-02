@@ -5,7 +5,7 @@ import Dropdown from "./Dropdown";
 import Input from "./Input";
 
 const ProductTable = ( { products, headers, setData, setDisplayMessage, rowsPerPage, setRowsPerPage, currentPage, setCurrentPage, totalProducts } ) => {
-  const updateDataUrl = `${ appLocalizer.apiUrl }/notifima/v1/update-product`;
+  const updateDataUrl = `${ appLocalizer.apiUrl }/notifima/v1/products`;
   const [ event, setEvent ] = useState();
   const [ inputChange, setInputChange ] = useState( false );
   const [ expandElement , setExpandElement ] = useState( {} );

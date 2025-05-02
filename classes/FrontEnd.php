@@ -38,53 +38,13 @@ class FrontEnd {
      * @return void
      */
     function frontend_scripts() {
-        $frontend_script_path = Notifima()->plugin_url . 'frontend/js/';
-        $suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-        $suffix = ''; /// Should be removed.
-        $settings_array = Utill::get_form_settings_array();
-        $button_settings = $settings_array[ 'customize_btn' ];
-
-        $border_size = ( !empty( $button_settings[ 'button_border_size' ] ) ) ? $button_settings[ 'button_border_size' ].'px' : '1px';
-
-        $button_css = '';
-        if ( !empty( $button_settings[ 'button_background_color' ] ) )
-            $button_css .= "background:" . $button_settings[ 'button_background_color' ] . "; ";
-        if ( !empty( $button_settings[ 'button_text_color' ] ) )
-            $button_css .= "color:" . $button_settings[ 'button_text_color' ] . "; ";
-        if ( !empty( $button_settings[ 'button_border_color' ] ) )
-            $button_css .= "border: " . $border_size . " solid " . $button_settings[ 'button_border_color' ] . "; ";
-        if ( !empty( $button_settings[ 'button_font_size' ] ) )
-            $button_css .= "font-size:" . $button_settings[ 'button_font_size' ] . "px; ";
-        if ( !empty( $button_settings[ 'button_border_redious' ] ) )
-            $button_css .= "border-radius:" . $button_settings[ 'button_border_redious' ] . "px;";
-
-        $subscribe_button_html = '<button style="' . $button_css .'" class="notifima-button alert_button_hover" name="alert_button">' . $button_settings[ 'button_text' ] . '</button>';
-        $unsubscribe_button_html = '<button class="unsubscribe-button" style="' . $button_css .'">' . $settings_array[ 'unsubscribe_button_text' ] . '</button>';
-
-        wp_register_script( 'notifima-frontend-script', $frontend_script_path . 'frontend' . $suffix . '.js', [ 'jquery', 'wp-element', 'wp-components' ], Notifima()->version, true );
-
-        wp_localize_script( 'notifima-frontend-script', 'localizeData', [
-            'ajax_url' => admin_url( 'admin-ajax.php', 'relative' ), 
-            'nonce'  => wp_create_nonce( 'notifima-security-nonce' ), 
-            'additional_fields' => apply_filters( 'notifima_form_additional_fields', [] ), 
-            'button_html' => $subscribe_button_html, 
-            'alert_success' => $settings_array[ 'alert_success' ], 
-            'alert_email_exist' => $settings_array[ 'alert_email_exist' ], 
-            'valid_email' => $settings_array[ 'valid_email' ], 
-            'ban_email_domain_text' => $settings_array[ 'ban_email_domain_text' ], 
-            'ban_email_address_text' => $settings_array[ 'ban_email_address_text' ], 
-            'double_opt_in_success' => $settings_array[ 'double_opt_in_success' ], 
-            'processing' => __( 'Processing...', 'notifima' ), 
-            'error_occurs' => __( 'Some error occurs', 'notifima' ), 
-            'try_again' => __( 'Please try again.', 'notifima' ), 
-            'unsubscribe_button' => $unsubscribe_button_html, 
-            'alert_unsubscribe_message' => $settings_array[ 'alert_unsubscribe_message' ], 
-            'recaptcha_enabled' => apply_filters( 'notifima_recaptcha_enabled', false )
-        ]);
-
+        FrontendScripts::load_scripts();
+        FrontendScripts::localize_scripts('notifima-frontend-script');
         if ( is_product() || is_shop() || is_product_category() ) {
             // Enqueue your frontend javascript from here
             wp_enqueue_script( 'notifima-frontend-script' );
+            FrontendScripts::enqueue_script('notifima-frontend-script');
+
         }
     }
 
@@ -93,12 +53,11 @@ class FrontEnd {
      * @return void
      */
     function frontend_styles() {
-        $frontend_style_path = Notifima()->plugin_url . 'frontend/css/';
-        $suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+        FrontendScripts::load_scripts();
         if ( function_exists( 'is_product' ) ) {
             if ( is_product() ) {
                 // Enqueue your frontend stylesheet from here
-                wp_enqueue_style( 'notifima-frontend-style', $frontend_style_path . 'frontend' . $suffix . '.css', [], Notifima()->version );
+                FrontendScripts::enqueue_style('notifima-frontend-style');
             } 
         } 
     } 
@@ -157,7 +116,7 @@ class FrontEnd {
             $get_variations = count( $productObj->get_children() ) <= apply_filters( 'woocommerce_ajax_variation_threshold', 30, $productObj );
             $get_variations = $get_variations ? $productObj->get_available_variations() : false;
             if ( $get_variations ) {
-                echo '<div class="stock-notifier-shortcode-subscribe-form" data-product-id="' . esc_attr( $productObj->get_id() ) . '"></div>';
+                echo '<div class="notifima-shortcode-subscribe-form" data-product-id="' . esc_attr( $productObj->get_id() ) . '"></div>';
             } else {
                 echo ( $this->get_subscribe_form( $productObj ) );
             } 
@@ -191,9 +150,9 @@ class FrontEnd {
         if ( ! Subscriber::is_product_outofstock( $variation ? $variation : $product ) ) {
             return "";
         } 
-        $stock_manager_fields_array = [];
-        $stock_manager_fields_html = $user_email = '';
-        $separator = apply_filters( 'notifima_form_fileds_separator', '<br>' );
+        $notifima_fields_array = [];
+        $notifima_fields_html = $user_email = '';
+        $separator = apply_filters( 'notifima_subscription_form_fields_separator', '<br>' );
         $settings_array = Utill::get_form_settings_array();
         $button_settings = $settings_array[ 'customize_btn' ];
 
@@ -202,7 +161,7 @@ class FrontEnd {
             $user_email = $current_user->data->user_email;
         } 
         $placeholder = $settings_array[ 'email_placeholder_text' ];
-        $alert_fields = apply_filters( 'notifima_fileds_array', [ 
+        $alert_fields = apply_filters( 'notifima_add_fields_in_subscription_form', [ 
             'alert_email' => [ 
                 'type' => 'text', 
                 'class'=> 'notifima-email', 
@@ -213,7 +172,7 @@ class FrontEnd {
         if ( $alert_fields ) {
             foreach ( $alert_fields as $key => $fvalue ) {
                 $type = in_array( $fvalue[ 'type' ], [ 'recaptcha-v3', 'text', 'number', 'email' ] ) ? esc_attr( $fvalue[ 'type' ] ) : 'text';
-                $class = isset( $fvalue[ 'class' ] ) ? esc_attr( $fvalue[ 'class' ] ) : 'stock_manager_' . $key;
+                $class = isset( $fvalue[ 'class' ] ) ? esc_attr( $fvalue[ 'class' ] ) : 'notifima_' . $key;
                 $value = isset( $fvalue[ 'value' ] ) ? esc_attr( $fvalue[ 'value' ] ) : '';
                 $placeholder = isset( $fvalue[ 'placeholder' ] ) ? esc_attr( $fvalue[ 'placeholder' ] ) : '';
                 switch ( $fvalue[ 'type' ] ) {
@@ -236,16 +195,16 @@ class FrontEnd {
                         $recaptchaSiteKeyInput = '<input type="hidden" id="recaptchav3_sitekey" name="recaptchav3_sitekey" value="' . esc_html( $sitekey ) . '" />';
                         $recaptchaSecretKeyInput = '<input type="hidden" id="recaptchav3_secretkey" name="recaptchav3_secretkey" value="' . esc_html( $secretkey ) . '" />';
 
-                        $stock_manager_fields_array[] = $recaptchaScript . $recaptchaResponseInput . $recaptchaSiteKeyInput . $recaptchaSecretKeyInput;
+                        $notifima_fields_array[] = $recaptchaScript . $recaptchaResponseInput . $recaptchaSiteKeyInput . $recaptchaSecretKeyInput;
                         break;
                     default:
-                        $stock_manager_fields_array[] = '<input id="stock_manager_' . $key . '" type="' . $type . '" name="' . $key . '" class="' . $class . '" value="' . $value . '" placeholder="' . $placeholder . '" >';
+                        $notifima_fields_array[] = '<input id="notifima_' . $key . '" type="' . $type . '" name="' . $key . '" class="' . $class . '" value="' . $value . '" placeholder="' . $placeholder . '" >';
                         break;
                 } 
             } 
         } 
-        if ( $stock_manager_fields_array ) {
-            $stock_manager_fields_html = implode( $separator, $stock_manager_fields_array );
+        if ( $notifima_fields_array ) {
+            $notifima_fields_html = implode( $separator, $notifima_fields_array );
         } 
 
         $alert_text_html = '<h5 style="color:' . esc_html( $settings_array[ 'alert_text_color' ] ) . '" class="subscribe_for_interest_text">' . esc_html( $settings_array[ 'alert_text' ] ) . '</h5>';
@@ -282,9 +241,9 @@ class FrontEnd {
         $lead_text_html = apply_filters( 'notifima_display_product_lead_time', $variation ? $variation : $product );
         return
         $lead_text_html .
-        '<div class="stock-notifier-subscribe-form" style="border-radius:10px;">
+        '<div class="notifima-subscribe-form" style="border-radius:10px;">
             ' . $alert_text_html . '
-            <div class="fields_wrap"> ' . $stock_manager_fields_html . '' . $button_html . '
+            <div class="fields_wrap"> ' . $notifima_fields_html . '' . $button_html . '
             </div>
             <input type="hidden" class="current-product-id" value="' . esc_attr( $product->get_id() ) . '" />
             <input type="hidden" class="current-variation-id" value="' . esc_attr( $variation ? $variation->get_id() : 0 ) . '" />

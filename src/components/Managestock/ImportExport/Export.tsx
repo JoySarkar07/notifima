@@ -46,9 +46,10 @@ const Export = () => {
     useEffect(() => {
     if (appLocalizer.khali_dabba) {
         axios({
-        method: "post",
-        url: `${appLocalizer.apiUrl}/notifima/v1/all-products`,
+        method: "GET",
+        url: `${appLocalizer.apiUrl}/notifima/v1/products`,
         headers: { 'X-WP-Nonce': appLocalizer.nonce },
+        params: { action: 'segment'},
         }).then((response) => {
         const parsedData: Product[] = Object.values(JSON.parse(response.data));
         setData(parsedData);

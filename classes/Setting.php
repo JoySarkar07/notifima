@@ -65,11 +65,11 @@ class Setting {
          * @var array setting keys
          */
         $this->settings_keys = apply_filters( 'notifima_register_settings_keys', [
-            'stockmanager_extra_settings',
-            'woo_stock_manager_appearance_tab_settings',
-            'woo_stock_manager_form_submission_tab_settings',
-            'woo_stock_manager_email_tab_settings',
-            'woo_stock_manager_mailchimp_tab_settings',
+            'notifima_extra_settings',
+            'notifima_appearance_settings',
+            'notifima_form_submission_settings',
+            'notifima_email_settings',
+            'notifima_mailchimp_settings',
         ]);
 
         return $this->settings_keys;
@@ -169,6 +169,6 @@ class Setting {
             }
         }
 
-        return 'stockmanager_extra_settings';
+        return 'notifima_extra_settings';
     }
 }

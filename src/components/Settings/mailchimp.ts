@@ -29,7 +29,7 @@ export default {
             key: "mailchimp_api",
             selectKey: 'selected_mailchimp_list',
             optionKey: 'mailchimp_list_options',
-            apiLink: "get-mailchimp-list",
+            apiLink: "mailchimps",
             type: "api-connect",
             label: __("Mailchimp API", "notifima"),
             dependent: {

@@ -10,7 +10,7 @@ class Utill {
      * Function to console and debug errors.
      */
     public static function log( $str ) {
-        $file = Notifima()->plugin_path . 'log/woo-notifima.log';
+        $file = Notifima()->plugin_path . 'log/notifima.log';
 
         if ( file_exists( $file ) ) {
             // Open the file to get existing content
@@ -86,10 +86,33 @@ class Utill {
      * @return bool
      */
     public static function is_khali_dabba() {
-        // if ( defined( 'NOTIFIMA_PRO_PLUGIN_VERSION' ) ) {
-		// 	return Notifima_Pro()->license->is_active();
-		// }
-        // return false;
-        return true;
+        if ( defined( 'NOTIFIMA_PRO_PLUGIN_VERSION' ) ) {
+			return Notifima_Pro()->license->is_active();
+		}
+        return false;
+    }
+
+    /**
+     * Get other templates ( e.g. product attributes ) passing attributes and including the file.
+     *
+     * @access public
+     * @param mixed $template_name
+     * @param array $args ( default: array() )
+     * @return void
+     */
+    public static function get_template( $template_name, $args = [] ) {
+        
+        if ( $args && is_array( $args ) ) {
+            extract( $args );
+        }
+    
+        // Check if the template exists in the theme
+        $theme_template = get_stylesheet_directory() . '/woocommerce-product-stock-alert/' . $template_name;
+    
+        // Use the theme template if it exists, otherwise use the plugin template
+        $located = file_exists( $theme_template ) ? $theme_template : Notifima()->plugin_path . 'templates/' . $template_name;
+    
+        // Load the template
+        load_template( $located, false, $args );
     }
 }

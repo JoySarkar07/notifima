@@ -7,13 +7,13 @@ defined( 'ABSPATH' ) || exit; // Exit if accessed directly
 if ( ! class_exists( 'SubscriberConfirmationEmail' ) ) :
 
 /**
- * Email for stock manager
+ * Email for Notifima
  *
  * An confirmation email will be sent to the customer when they subscribe product.
  *
  * @class 		SubscriberConfirmationEmail
  * @version		1.3.0
- * @author 		WC Marketplace
+ * @author 		MultivendorX
  * @extends 	\WC_Email
  */
 class SubscriberConfirmationEmail extends \WC_Email {
@@ -28,7 +28,7 @@ class SubscriberConfirmationEmail extends \WC_Email {
 	 * @return void
 	 */
 	function __construct() {		
-		$this->id 			= 'stock_manager_subscriber_confirmation';
+		$this->id 			= 'notifima_subscriber_confirmation';
 		$this->title 			= __( 'Confirm subscriber', 'notifima' );
 		$this->description	= __( 'Confirm customer when they subscribe a product', 'notifima' );
 		$this->template_html 	= 'emails/SubscriberConfirmationEmail.php';
@@ -64,7 +64,7 @@ class SubscriberConfirmationEmail extends \WC_Email {
 	 * @return string
 	 */
 	public function get_default_subject() {
-		return apply_filters( 'woocommerce_email_subject_notifima', __( 'You have subscribed to a product on {site_title} ', 'notifima' ), $this->object );
+		return apply_filters( 'notifima_customer_subscription_email_subject', __( 'You have subscribed to a product on {site_title} ', 'notifima' ), $this->object );
 	} 
 
 	/**
@@ -74,7 +74,7 @@ class SubscriberConfirmationEmail extends \WC_Email {
 	 * @return string
 	 */
 	public function get_default_heading() {
-		return apply_filters( 'woocommerce_email_heading_notifima', __( 'Welcome to {site_title} ', 'notifima' ), $this->object );
+		return apply_filters( 'notifima_customer_subscription_email_heading', __( 'Welcome to {site_title} ', 'notifima' ), $this->object );
 	} 
 
 	/**
@@ -85,14 +85,14 @@ class SubscriberConfirmationEmail extends \WC_Email {
 	 */
 	function get_content_html() {
 		ob_start();
-		wc_get_template( $this->template_html, [
+		Notifima()->util->get_template($this->template_html, [
 			'email_heading' => $this->get_heading(), 
 			'product' 		=> $this->product, 
 			'customer_email'=> $this->recipient, 
 			'sent_to_admin' => false, 
 			'plain_text' 	=> false, 
 			'email' 		=> $this, 
-		], '', $this->template_base );
+		]);
 		return ob_get_clean();
 	} 
 
@@ -104,13 +104,14 @@ class SubscriberConfirmationEmail extends \WC_Email {
 	 */
 	function get_content_plain() {
 		ob_start();
-		wc_get_template( $this->template_plain, [
+		Notifima()->util->get_template($this->template_plain, [
 			'email_heading' => $this->get_heading(), 
 			'product' 		=> $this->product, 
 			'customer_email'=> $this->recipient, 
 			'sent_to_admin' => false, 
-			'plain_text' 	=> true
-		], '', $this->template_base );
+			'plain_text' 	=> false, 
+			'email' 		=> $this, 
+		]);
 		return ob_get_clean();
 	} 
 	

@@ -5,7 +5,7 @@ namespace Notifima\Deprecated;
 /**
  * Deprecated action hooks
  *
- * @package Stock Manager
+ * @package Notifima
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -22,14 +22,12 @@ class DeprecatedActionHooks extends \WC_Deprecated_Hooks {
 	 */
 	protected $deprecated_hooks = [ 
         'wc_product_stock_alert_new_subscriber_added' => 'dc_wc_product_stock_alert_new_subscriber_added', 
-		// 'woocommerce_stock_manager_form_before' 	  => 'woocommerce_product_stock_alert_form_before', 
-		// 'woocommerce_stock_manager_form_after' 		  => 'woocommerce_product_stock_alert_form_after', 
 		'woo_stock_manager_settings_after_save'       => 'woo_stock_alert_settings_after_save',
-		'notifima_before_subscribe'       			  => 'stock_manager_before_subscribe', 
+		'notifima_before_subscribe_product'       	  => 'stock_manager_before_subscribe', 
 		'notifima_loaded'       			  		  => 'stock_manager_loaded', 
-		'notifima_settings_after_save'       		  => 'stock_manager_settings_after_save', 
-		'notifima_form_before'       		  		  => 'woocommerce_product_stock_alert_form_before', 
-		'notifima_form_after'       		  		  => 'woocommerce_product_stock_alert_form_after', 
+		'notifima_after_save_settings'       		  => 'stock_manager_settings_after_save', 
+		'notifima_before_subscription_form'       	  => 'woocommerce_product_stock_alert_form_before', 
+		'notifima_after_subscription_form'       	  => 'woocommerce_product_stock_alert_form_after', 
 	];
 
 	/**

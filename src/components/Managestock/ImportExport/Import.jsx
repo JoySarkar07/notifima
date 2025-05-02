@@ -15,9 +15,10 @@ const Import = () => {
     useEffect( () => {
         if ( appLocalizer.khali_dabba ) {
             axios({
-                method: "post",
-                url: `${ appLocalizer.apiUrl }/notifima/v1/all-products`,
+                method: "GET",
+                url: `${ appLocalizer.apiUrl }/notifima/v1/products`,
                 headers: { 'X-WP-Nonce' : appLocalizer.nonce },
+                params: { action: 'segment' },
             } ).then( ( response ) => {
                 let parsedData = JSON.parse( response.data );
                 setData(Object.values( parsedData ) );
@@ -85,8 +86,8 @@ const Import = () => {
             reader.onload = function ( e ) {
                 let csvData = processCSV(e.target.result);
                 axios({
-                    method: 'post',
-                    url: `${ appLocalizer.apiUrl }/notifima/v1/import-products`,
+                    method: 'POST',
+                    url: `${ appLocalizer.apiUrl }/notifima/v1/products`,
                     headers: { 'X-WP-Nonce' : appLocalizer.nonce, 'Content-Type': 'application/json' },
                     data: { product: csvData }
                 })

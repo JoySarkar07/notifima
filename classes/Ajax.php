@@ -166,19 +166,19 @@ class Ajax {
 		 * @var int $product_id
 		 * @var int $variation_id
 		 */
-		do_action( 'notifima_before_subscribe', $customer_email, $product_id, $variation_id );
+		do_action( 'notifima_before_subscribe_product', $customer_email, $product_id, $variation_id );
 
 		if ( $product_id && !empty( $product_id ) && !empty( $customer_email ) ) {
 			$product_id = ( $variation_id && $variation_id > 0 ) ? $variation_id : $product_id;
-			$do_complete_additional_task = apply_filters( 'notifima_do_complete_additional_task', false );
-        	$is_accept_email_address = apply_filters( 'notifima_is_accept_email_address', false );
+			$do_complete_additional_task = apply_filters( 'notifima_double_optin_enabled', false );
+        	$is_accept_email_address = apply_filters( 'notifima_is_accept_ban_email_address', false );
 
 			if ( Subscriber::is_already_subscribed( $customer_email, $product_id ) ) {
 				$status = '/*?%already_registered%?*/';
 			} else if ( $do_complete_additional_task ) {
 				$status = apply_filters( 'notifima_new_subscriber_added', true, $customer_email, $product_id );
 			} else if ( $is_accept_email_address ) {
-				$status = apply_filters( 'notifima_accept_email', true, $customer_email, $product_id );
+				$status = apply_filters( 'notifima_accept_ban_email', true, $customer_email, $product_id );
 			} else {
 				Subscriber::insert_subscriber( $customer_email, $product_id );
 				Subscriber::insert_subscriber_email_trigger( wc_get_product( $product_id ), $customer_email );

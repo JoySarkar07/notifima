@@ -33,9 +33,8 @@ export interface RealtimeFilter {
 
 
 const SubscribersList = () => {
-  const fetchSubscribersDataUrl = `${appLocalizer.apiUrl}/notifima/v1/get-subscriber-list`;
-  const fetchSubscribersCount = `${appLocalizer.apiUrl}/notifima/v1/get-table-segment`;
-  const bulkActionUrl = `${appLocalizer.apiUrl}/notifima/v1/bulk-action`;
+  const fetchSubscribersDataUrl = `${appLocalizer.apiUrl}/notifima/v1/subscribers`;
+  const bulkActionUrl = `${appLocalizer.apiUrl}/notifima/v1/subscribers`;
   const [rowSelection, setRowSelection] = useState<Record<string, boolean>>({});
   const dateRef = useRef<HTMLDivElement | null>(null);
   const bulkSelectRef = useRef<HTMLSelectElement>(null);
@@ -135,9 +134,10 @@ const SubscribersList = () => {
   useEffect(() => {
     if (appLocalizer.khali_dabba) {
       axios<SubscriberResponse>({
-        method: "post",
-        url: fetchSubscribersCount,
+        method: "GET",
+        url: fetchSubscribersDataUrl,
         headers: { "X-WP-Nonce": appLocalizer.nonce },
+        params: { action: 'segment'}
       }).then((response) => {
         const responseData = response.data;
         setTotalRows(responseData.all);
@@ -218,10 +218,10 @@ const SubscribersList = () => {
     //Fetch the data to show in the table
     setData(null);
     axios({
-      method: "post",
+      method: "GET",
       url: fetchSubscribersDataUrl,
       headers: { "X-WP-Nonce": appLocalizer.nonce },
-      data: {
+      params: {
         page: currentPage,
         row: rowsPerPage,
         postStatus: postStatus,
@@ -266,10 +266,10 @@ const SubscribersList = () => {
   const handleClick = () => {
     if (appLocalizer.khali_dabba) {
       axios({
-        method: "post",
+        method: "GET",
         url: fetchSubscribersDataUrl,
         headers: { "X-WP-Nonce": appLocalizer.nonce },
-        data: {
+        params: {
           postStatus: postStatus,
           search_field: filters.searchField,
           search_action: filters.searchAction,
@@ -421,7 +421,7 @@ const SubscribersList = () => {
             <button>
               <a href={appLocalizer.export_button}>{"Download CSV"}</a>
             </button>
-            <p className="description" dangerouslySetInnerHTML={{ __html: "This CSV file contains all subscriber data from your site. Upgrade to <a href='https://multivendorx.com/woocommerce-product-stock-manager-notifier-pro/?utm_source=wpadmin&utm_medium=pluginsettings&utm_campaign=stockmanager' target='_blank'>WooCommerce Product Stock Manager & Notifier Pro</a> to generate CSV files based on specific products or users." }}></p>
+            <p className="description" dangerouslySetInnerHTML={{ __html: "This CSV file contains all subscriber data from your site. Upgrade to <a href='https://multivendorx.com/woocommerce-product-stock-manager-notifier-pro/?utm_source=wpadmin&utm_medium=pluginsettings&utm_campaign=stockmanager' target='_blank'>Notifima Pro</a> to generate CSV files based on specific products or users." }}></p>
           </div>
           <Dialog
             className="admin-module-popup"
