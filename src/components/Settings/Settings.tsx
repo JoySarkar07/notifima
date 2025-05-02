@@ -2,23 +2,20 @@
 import Brand from "../../assets/images/Brand.png";
 import BrandSmall from "../../assets/images/Brand-small.png";
 import { useLocation } from "react-router-dom";
-import React, { useState, useEffect, JSX } from "react";
+import React, { useEffect, JSX } from "react";
 import { __ } from "@wordpress/i18n";
-
 // Context
 import { SettingProvider, useSetting } from "../../contexts/SettingContext";
-
 // Services
 import { getTemplateData } from "../../services/templateService";
 // Utils
-// import { getAvailableSettings, getSettingById, SettingContent } from "../../utiles/settingUtil";
 import { getAvailableSettings, getSettingById, SettingContent } from "zyra";
 import { Support, AdminForm, Banner, Tabs} from "zyra";
 import { useModules } from "../../contexts/ModuleContext";
 import ShowProPopup from "../Popup/Popup";
 import { Link } from "react-router-dom";
 
-// // Types
+// Types
 type SettingItem = Record<string,any>;
 
 interface SettingsProps{
@@ -53,24 +50,24 @@ const supportLink = [
 
 const products:Products[]=[
     {
-        title : "Double Opt-In",
-        description : "Experience the power of Double Opt-In for our Stock Alert Form - Guaranteed precision in every notification!",
+        title : __("Double Opt-In", "notifima"),
+        description : __("Experience the power of Double Opt-In for our Stock Alert Form - Guaranteed precision in every notification!", "notifima"),
     },
     {
-        title : "Your Subscription Hub",
-        description : "Subscription Dashboard - Easily monitor and download lists of out-of-stock subscribers for seamless management.",
+        title : __("Your Subscription Hub", "notifima"),
+        description : __("Subscription Dashboard - Easily monitor and download lists of out-of-stock subscribers for seamless management.", "notifima"),
     },
     {
-        title : "Mailchimp Bridge",
-        description : "Seamlessly link WooCommerce out-of-stock subscriptions with Mailchimp for effective marketing.",
+        title : __("Mailchimp Bridge", "notifima"),
+        description : __("Seamlessly link WooCommerce out-of-stock subscriptions with Mailchimp for effective marketing.", "notifima"),
     },
     {
-        title : "Unsubscribe Notifications",
-        description : "User-Initiated Unsubscribe from In-Stock Notifications.",
+        title : __("Unsubscribe Notifications", "notifima"),
+        description : __("User-Initiated Unsubscribe from In-Stock Notifications.", "notifima"),
     },
     {
-        title : "Ban Spam Emails",
-        description : "Email and Domain Blacklist for Spam Prevention.",
+        title : __("Ban Spam Emails", "notifima"),
+        description : __("Email and Domain Blacklist for Spam Prevention.", "notifima"),
     }
 ];
 
@@ -97,33 +94,31 @@ const faqs = [
     },
 ];
 
-const Settings: React.FC<SettingsProps> = ({id}) => {
+const Settings: React.FC<SettingsProps> = ( { id } ) => {
     const settingsArray: SettingItem[] = getAvailableSettings(getTemplateData(), []);
     const location = new URLSearchParams(useLocation().hash.substring(1));
 
-    console.log("Settings Array", settingsArray);
-
     const getBanner = ()=>{
-        return <Banner products={products} is_pro={false} pro_url={appLocalizer.pro_url}/>;
+        return <Banner products={ products } is_pro={ false } pro_url={ appLocalizer.pro_url }/>;
     }
     // Render the dynamic form
-    const getForm = (currentTab: string | null): JSX.Element | null => {
-        if (!currentTab) return null;
+    const getForm = ( currentTab: string | null ): JSX.Element | null => {
+        if ( !currentTab ) return null;
 
         const { setting, settingName, setSetting, updateSetting } = useSetting();
-        const settingModal = getSettingById(settingsArray as any, currentTab);
+        const settingModal = getSettingById( settingsArray as any, currentTab );
         const { modules } = useModules();
 
         // Ensure settings context is initialized
         if (settingName !== currentTab) {
-            setSetting(currentTab, appLocalizer.settings_databases_value[currentTab] || {});
+            setSetting(currentTab, appLocalizer.settings_databases_value[ currentTab ] || {});
         }
 
         useEffect(() => {
             if (settingName === currentTab) {
-                appLocalizer.settings_databases_value[settingName] = setting;
+                appLocalizer.settings_databases_value[ settingName ] = setting;
             }
-        }, [setting, settingName, currentTab]);
+        }, [ setting, settingName, currentTab ]);
 
         // Special component
         if (currentTab === 'faq') {
@@ -132,8 +127,7 @@ const Settings: React.FC<SettingsProps> = ({id}) => {
 
         return (
             <>  
-                {console.log("App Localizer", appLocalizer)}
-                {settingName === currentTab
+                { settingName === currentTab
                     ? <AdminForm settings={settingModal as SettingContent} proSetting={appLocalizer.pro_settings_list} setting={setting} updateSetting={updateSetting} appLocalizer={appLocalizer} modules={modules} ProPopup={ShowProPopup}/>
                     : <>Loading...</>
                 }
@@ -144,16 +138,16 @@ const Settings: React.FC<SettingsProps> = ({id}) => {
     return (
         <SettingProvider>
             <Tabs
-                tabData={settingsArray as any}
-                currentTab={location.get('subtab') as string}
-                getForm={getForm}
-                BannerSection={getBanner}
-                prepareUrl={(subTab: string) => `?page=notifima#&tab=settings&subtab=${ subTab }` }
-                appLocalizer={appLocalizer}
+                tabData={ settingsArray as any }
+                currentTab={ location.get('subtab') as string }
+                getForm={ getForm }
+                BannerSection={ getBanner }
+                prepareUrl={ ( subTab: string ) => `?page=notifima#&tab=settings&subtab=${ subTab }` }
+                appLocalizer={ appLocalizer }
                 brandImg={ Brand } 
                 smallbrandImg={ BrandSmall }
                 supprot={ supportLink }
-                Link={Link}
+                Link={ Link }
             />
         </SettingProvider>
     );

@@ -34,7 +34,7 @@
     "react-router-dom": "^7.5.0",
     "ts-loader": "^9.5.2",
     "typescript": "^5.8.3",
-    "zyra": "file:../zyra"
+    "zyra": "file:../../../../../../Users/joys1/OneDrive/Desktop/PluginElements/zyra"
   },
   "peerDependencies": {
     "react": "^18.3.1",

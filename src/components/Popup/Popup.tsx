@@ -1,10 +1,21 @@
 import React from "react";
+import { __ } from "@wordpress/i18n";
 import { ProPopup } from "zyra";
 
 const proPopupContent = {
-    proUrl: appLocalizer.pro_url,
-    title: "Boost to Product Notifima Pro to access premium features!",
-    messages: ["Double Opt-in.", "Ban Spam Mail.", "Export Subscribers.", "Subscription Dashboard.", "MailChimp Integration.", "Recaptcha Support.", "Subscription Details.", "Notifima Dashboard.", "Export/Import Stock."],
+  proUrl: appLocalizer.pro_url,
+  title: __("Boost to Product Notifima Pro to access premium features!", "notifima"),
+  messages: 
+  [ __("Double Opt-in.", "notifima"), 
+    __("Ban Spam Mail.", "notifima"), 
+    __("Export Subscribers.", "notifima"), 
+    __("Subscription Dashboard.", "notifima"), 
+    __("MailChimp Integration.", "notifima"), 
+    __("Recaptcha Support.", "notifima"), 
+    __("Subscription Details.", "notifima"), 
+    __("Notifima Dashboard.", "notifima"), 
+    __("Export/Import Stock.", "notifima")
+  ],
 }
 
 

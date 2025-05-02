@@ -1,12 +1,11 @@
-import React from 'react';
 import { useLocation } from 'react-router-dom';
 
 import Settings from './components/Settings/Settings';
 import { ModuleProvider } from './contexts/ModuleContext';
 import SubscribersList from './components/SubscriberList/SubscribersList';
 import ManageStock from './components/Managestock/Managestock';
-// import Import from './components/Managestock/ImportExport/Import';
-// import Export from './components/Managestock/ImportExport/Export';
+import Import from './components/Managestock/ImportExport/Import';
+import Export from './components/Managestock/ImportExport/Export';
 
 // for react tour
 // import { TourProvider } from '@reactour/tour';
@@ -31,8 +30,8 @@ const Route = () => {
             { currentTab.get('tab') === 'settings' && <Settings id={"settings"}/> }
             { currentTab.get('tab') === 'subscribers-list' && <SubscribersList />}
             { currentTab.get('tab') === 'manage-stock' && <ManageStock /> }
-            {/* { currentTab.get('tab') === 'import' && <Import /> } */}
-            {/* { currentTab.get('tab') === 'export' && <Export /> } */}
+            { currentTab.get('tab') === 'import' && <Import /> }
+            { currentTab.get('tab') === 'export' && <Export /> }
         </>
     );
 }
