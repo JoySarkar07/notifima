@@ -8,14 +8,14 @@ import { StockDataType } from '../Managestock';
 import { ImportExportStockDataType } from "./Export";
 
 const Import = () => {
-    const [data, setData] = useState<StockDataType[]>([]);
-    const [file, setFile] = useState<File | null>(null);
-    const [filename, setFilename] = useState<string>('');
-    const [displayMessage, setDisplayMessage] = useState<string>('');
+    const [ data, setData ] = useState<StockDataType[]>( [] );
+    const [ file, setFile ] = useState<File | null>( null );
+    const [ filename, setFilename ] = useState<string>( '' );
+    const [ displayMessage, setDisplayMessage ] = useState<string>( '' );
 
     // Fetch all the data for the sample CSV
     useEffect(() => {
-        if (appLocalizer.khali_dabba) {
+        if ( appLocalizer.khali_dabba ) {
         axios({
             method: 'post',
             url: `${appLocalizer.apiUrl}/notifima/v1/all-products`,
@@ -31,7 +31,7 @@ const Import = () => {
 
     // Convert data for export
     const getData = (): ImportExportStockDataType[] => {
-        return data.map((row) => ({
+        return data.map( ( row ) => ({
         ...row,
         manage_stock: row.manage_stock ? 'yes' : 'no',
         stock_quantity: row.stock_quantity ?? '-', // if null/undefined, set '-'
@@ -61,23 +61,23 @@ const Import = () => {
         // Determine End of Line (EOL) character
         let eol = '\n';
         if (str.indexOf('\r') !== -1) {
-        if (str.indexOf('\r') < str.indexOf('\n')) {
-            eol = '\r\n';
-        } else {
-            eol = '\r';
-        }
+            if (str.indexOf('\r') < str.indexOf('\n')) {
+                eol = '\r\n';
+            } else {
+                eol = '\r';
+            }
         }
     
-        const headers = str.slice(0, str.indexOf(eol)).split(delim);
-        const rows = str.slice(str.indexOf('\n') + 1).split(eol);
+        const headers = str.slice( 0, str.indexOf( eol )).split( delim );
+        const rows = str.slice( str.indexOf( '\n' ) + 1).split( eol );
     
         const processedCsvData = rows
         .filter(row => row.trim() !== '') // Ignore empty rows
         .map(row => {
-            const values = row.split(delim);
-            const eachObject = headers.reduce<Record<string, string>>((obj, header, i) => {
-            obj[header.trim()] = (values[i] ?? '').trim();
-            return obj;
+            const values = row.split( delim );
+            const eachObject = headers.reduce< Record < string, string > >(( obj, header, i ) => {
+            obj[header.trim()] = ( values[i] ?? '' ).trim();
+                return obj;
             }, {});
             return eachObject;
         });

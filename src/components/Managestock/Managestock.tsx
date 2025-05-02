@@ -7,7 +7,9 @@ import { Dialog } from "@mui/material";
 import Popup from "../Popup/Popup";
 import "./ManagestockTable.scss";
 import { __ } from "@wordpress/i18n";
+import type { RealtimeFilter } from '../SubscriberList/SubscribersList';
 
+// Type declarations
 export interface StockDataType{
     backorders: string;
     id: string;
@@ -46,15 +48,10 @@ type FilterData = {
   searchField?: string;
 }
 
-export interface RealtimeFilter {
-  name: string;
-  render: (updateFilter: (key: string, value: any) => void, filterValue: any) => ReactNode;
-} 
-
 const Managestock:React.FC = () => {
   const updateDataUrl = `${ appLocalizer.apiUrl }/notifima/v1/update-product`;
-  const fetchDataUrl   = `${appLocalizer.apiUrl}/notifima/v1/get-products`;
-  const segmentDataUrl = `${appLocalizer.apiUrl}/notifima/v1/all-products`;
+  const fetchDataUrl   = `${ appLocalizer.apiUrl }/notifima/v1/get-products`;
+  const segmentDataUrl = `${ appLocalizer.apiUrl }/notifima/v1/all-products`;
   const [data, setData] = useState<StockDataType[] | null>(null);
   const [headers, setHeaders] = useState([]);
   const [displayMessage, setDisplayMessage] = useState("");
@@ -68,18 +65,19 @@ const Managestock:React.FC = () => {
       pageSize: 10,
     });
   const selectRef = useRef<HTMLSelectElement>(null);
+  const stockChanged = useRef<boolean>(false);
 
 
   const handleSelectChange = () => {
-    if(appLocalizer.khali_dabba){
+    if( appLocalizer.khali_dabba ){
       const selectedValue = selectRef.current?.value;
       const updatedFilters = {
         ...filter,
         searchProductType: selectedValue,
       };
-      setFilter(updatedFilters);
+      setFilter( updatedFilters );
       // Call API with updated filters, not old ones
-      requestApiForData(pagination.pageSize, 1, updatedFilters);
+      requestApiForData( pagination.pageSize, 1, updatedFilters );
     }
   };
 
@@ -91,9 +89,9 @@ const Managestock:React.FC = () => {
             <>
               <div className="subscriber-bulk-action bulk-action">
                 <select name="action" ref={selectRef} onChange={handleSelectChange}>
-                  <option value="">{'Product Type'}</option>
-                  <option value="Simple">{'Simple'}</option>
-                  <option value="Variable">{'Variable'}</option>
+                  <option value="">{ __( 'Product Type', "notifima" ) }</option>
+                  <option value="Simple">{ __( 'Simple', "notifima" ) }</option>
+                  <option value="Variable">{ __( 'Variable', "notifima" ) }</option>
                 </select>
               </div>
             </>
@@ -102,23 +100,23 @@ const Managestock:React.FC = () => {
       },
       {
         name: "searchField",
-        render: (updateFilter, filterValue) => (
+        render: ( updateFilter, filterValue ) => (
           <>
             <div className="admin-header-search-section search-section">
               <input
-                name="searchField"
-                type="text"
-                placeholder={"Search..."}
-                onChange={(e) => {
-                  updateFilter(e.target.name, e.target.value)
-                  setFilter((previousfilters) => {
+                name= "searchField"
+                type= "text"
+                placeholder={ __( "Search...", "notifima" ) }
+                onChange={( e ) => {
+                  updateFilter( e.target.name, e.target.value )
+                  setFilter( ( previousfilters ) => {
                     return {
                       ...previousfilters, 
                       searchField : e.target.value
                     }
                   })
                 }}
-                value={filterValue || ""}
+                value={ filterValue || "" }
               />
             </div>
           </>
@@ -126,25 +124,25 @@ const Managestock:React.FC = () => {
       },
       {
         name: "searchAction",
-        render: (updateFilter, filterValue) => (
+        render: ( updateFilter, filterValue ) => (
           <>
             <div className="admin-header-search-section searchAction">
               <select
                 name="searchAction"
-                onChange={(e) => {
-                  updateFilter(e.target.name, e.target.value)
-                  setFilter((previousfilters) => {
+                onChange={( e ) => {
+                  updateFilter( e.target.name, e.target.value )
+                  setFilter( ( previousfilters ) => {
                     return {
                       ...previousfilters, 
                       searchAction : e.target.value
                     }
                   })
                 }}
-                value={filterValue || ""}
+                value={ filterValue || "" }
               >
-                <option value="">Select</option>
-                <option value="productName">Product Name</option>
-                <option value="productSku">Sku</option>
+                <option value="">{ __( "Select", "notifima" ) }</option>
+                <option value="productName">{ __( "Product Name", "notifima" ) }</option>
+                <option value="productSku">{ __( "Sku", "notifima" ) }</option>
               </select>
             </div>
           </>
@@ -153,38 +151,38 @@ const Managestock:React.FC = () => {
     ];
 
   useEffect(() => {
-    if (!appLocalizer.khali_dabba) return;
+    if ( !appLocalizer.khali_dabba ) return;
     axios({
       method: "post",
       url: segmentDataUrl,
       headers: { "X-WP-Nonce": appLocalizer.nonce },
       data: { segment: true },
-    }).then((response) => {
+    }).then( ( response ) => {
       const responseData = response.data;
       setProductCount([
         {
           key: "all",
           name: "All",
-          count: responseData["all"],
+          count: responseData[ "all" ],
         },
         {
           key: "instock",
           name: "In stock",
-          count: responseData["instock"],
+          count: responseData[ "instock" ],
         },
         {
           key: "onbackorder",
           name: "On backorder",
-          count: responseData["onbackorder"],
+          count: responseData[ "onbackorder" ],
         },
         {
           key: "outofstock",
           name: "Out of stock",
-          count: responseData["outofstock"],
+          count: responseData[ "outofstock" ],
         },
       ]);
     });
-  }, []);
+  }, [ stockChanged.current ]);
 
 
   function requestData(
@@ -196,7 +194,7 @@ const Managestock:React.FC = () => {
     stock_status: string = "",
   ) {
     //Fetch the data to show in the table
-    setData(null);
+    setData( null );
     axios({
       method: "post",
       url: fetchDataUrl,
@@ -209,29 +207,29 @@ const Managestock:React.FC = () => {
         product_type: product_type,
         stock_status: stock_status,
       },
-    }).then((response) => {
-      const data = JSON.parse(response.data);
-      setData(data.products);
+    }).then( ( response ) => {
+      const data = JSON.parse( response.data );
+      setData( data.products );
     });
   }
 
 
-  const requestApiForData = (rowsPerPage:number, currentPage:number, filterData:FilterData) => {
-      setData(null);
-      filterData = {...filter,...filterData};
+  const requestApiForData = ( rowsPerPage:number, currentPage:number, filterData:FilterData ) => {
+      setData( null );
+      filterData = { ...filter, ...filterData };
       requestData(
         rowsPerPage,
         currentPage,
-        filterData.searchAction==="productName"?filterData.searchField as string:"",
-        filterData.searchAction==="productSku"?filterData.searchField as string:"",
+        filterData.searchAction === "productName" ? filterData.searchField as string : "",
+        filterData.searchAction === "productSku" ? filterData.searchField as string : "",
         filterData.searchProductType || "",
-        filterData.typeCount==="all"?"":filterData.typeCount
+        filterData.typeCount === "all" ? "" : filterData.typeCount
       );
     };
 
   useEffect(() => {
-    if (!appLocalizer.khali_dabba) return;
-    setData(null);
+    if ( !appLocalizer.khali_dabba ) return;
+    setData( null );
     //Fetch the data to show in the table
     axios({
       method: "post",
@@ -245,18 +243,18 @@ const Managestock:React.FC = () => {
         product_type: filter.searchProductType,
         stock_status: filter.typeCount,
       },
-    }).then((response) => {
-      let parsedData = JSON.parse(response.data);
-      setData(parsedData.products);
-      setHeaders(parsedData.headers);
-      setTotalPages(Math.ceil(parsedData.total_products/pagination.pageSize));
+    }).then( ( response ) => {
+      let parsedData = JSON.parse( response.data );
+      setData( parsedData.products );
+      setHeaders( parsedData.headers );
+      setTotalPages( Math.ceil( parsedData.total_products/pagination.pageSize ) );
     });
   }, [
     pagination,
   ]);
 
-  const updateData = (id:string, name:string ,value:any) => {
-    if (!id) {
+  const updateData = ( id:string, name:string ,value:any ) => {
+    if ( !id ) {
       return;
     }
     axios( {
@@ -264,73 +262,73 @@ const Managestock:React.FC = () => {
       url: updateDataUrl,
       headers: { "X-WP-Nonce": appLocalizer.nonce },
       data: {
-        id: String(id),
-        name: "set_"+String(name),
-        value: String(value),
+        id: String( id ),
+        name: "set_" + String( name ),
+        value: String( value ),
       },
     } ).then( ( response ) => {
-      setSuccessMessage("Data updated successfully!");
+      setSuccessMessage( __( "Data updated successfully!", "notifima" ) );
       setTimeout(() => {
-        setSuccessMessage("");
+        setSuccessMessage( __( "", "notifima" ) );
       }, 2000);
     } )
     .catch( ( error ) => {
-      setSuccessMessage("Error updating data!");
+      setSuccessMessage( __( "Error updating data!", "notifima" ) );
       setTimeout(() => {
-        setSuccessMessage("");
+        setSuccessMessage( __( "", "notifima" ) );
       }, 2000);
     } );
   }
 
-  const onCellChange = (productId:any, productKey:any, val:any) => {
-    if (!data) return;
+  const onCellChange = ( productId:any, productKey:any, val:any ) => {
+    if ( !data ) return;
     setData(prev => {
-      if (!prev) return prev;
+      if ( !prev ) return prev;
       return {
         ...prev,
-        [productId]: {
-          ...prev[productId],
-          [productKey]:val,
+        [ productId ]: {
+          ...prev[ productId ],
+          [ productKey ]: val,
         },
       };
     });
   };
 
-  const onChange = (e:any, key:string, rowId:string, type:string, row:Record<string,any>) => {
-    key=(key==="product")?"name":key;
-    if(type === "checkbox"){
-      onCellChange(rowId, key, e.target.checked);
-      updateData(rowId, key, e.target.checked);
+  const onChange = ( e:any, key:string, rowId:string, type:string, row:Record<string,any> ) => {
+    key=( key === "product" ) ? "name" : key;
+    if( type === "checkbox" ){
+      onCellChange( rowId, key, e.target.checked );
+      updateData( rowId, key, e.target.checked );
     }
-    else if(type === "dropdown"){
-      if ('value' in e) {
-        onCellChange(rowId, key, e.value);
-        updateData(rowId, key, e.value);
+    else if( type === "dropdown" ){
+      if ( 'value' in e ) {
+        onCellChange( rowId, key, e.value );
+        updateData( rowId, key, e.value );
       }
     }
     else{
-      if(key === "regular_price" ){
-        if(parseInt(e.target.value) < parseInt(row.sale_price)){
-          setDisplayMessage("Regular price should be greater than sale price.");
+      if( key === "regular_price" ){
+        if( parseInt( e.target.value ) < parseInt( row.sale_price ) ){
+          setDisplayMessage( __( "Regular price should be greater than sale price.", "notifima" ) );
           setTimeout(() => {
-            setDisplayMessage("");
+            setDisplayMessage( __( "", "notifima" ) );
           }, 2000);
           return;
         }
       }
-      else if(key === "sale_price"){
-        if(parseInt(e.target.value) > parseInt(row.regular_price)){
-          setDisplayMessage("Sale price should be less than regular price.");
+      else if( key === "sale_price" ){
+        if( parseInt( e.target.value ) > parseInt( row.regular_price ) ){
+          setDisplayMessage( __( "Sale price should be less than regular price.", "notifima" ) );
           setTimeout(() => {
-            setDisplayMessage("");
+            setDisplayMessage( __( "", "notifima" ) );
           }, 2000);
           return;
         }
       }
-      else if(key === "stock_quantity"){
-        onCellChange(rowId, key, e.target.value);
-        updateData(rowId, key, e.target.value);
-        if(e.target.value > 0){
+      else if( key === "stock_quantity" ){
+        onCellChange( rowId, key, parseInt( e.target.value ) );
+        updateData( rowId, key, parseInt( e.target.value ) );
+        if( e.target.value > 0){
           onCellChange(rowId, "stock_status", "instock");
           updateData(rowId, "stock_status", "instock");
         }
@@ -338,17 +336,18 @@ const Managestock:React.FC = () => {
           onCellChange(rowId, "stock_status", "outofstock");
           updateData(rowId, "stock_status", "outofstock");
         }
+        stockChanged.current = !stockChanged.current;
         return;
       }
-      updateData(rowId, key, e.target.value);
-      onCellChange(rowId, key, e.target.value);
+      updateData( rowId, key, e.target.value );
+      onCellChange( rowId, key, e.target.value );
     }
   }
 
-  
-  const columns: ColumnDef<Record<string, any>, any>[] = Object.entries(headers)
-  .filter(([_, headerData]: [string, HeaderType]) => headerData.name !== 'Image' && headerData.name !== 'Name')
-  .map(([key, headerData]: [string, HeaderType]): ColumnDef<Record<string, any>, any> => ({
+  // Define columns based on headers
+  const columns: ColumnDef< Record < string, any >, any > [] = Object.entries(headers)
+  .filter( ( [ _, headerData ]: [ string, HeaderType ] ) => headerData.name !== 'Image' && headerData.name !== 'Name')
+  .map( ( [ key, headerData ]: [ string, HeaderType ] ) : ColumnDef< Record < string, any >, any > => ({
     id: key,
     header: headerData.name,
     cell: ({ row }) => {
@@ -382,24 +381,24 @@ const Managestock:React.FC = () => {
       
       return (
         <TableCell
-          key={key}
-          title={headerData.name}
-          type={type}
-          header={headerData}
-          fieldValue={headerData.type === "number" ? String(value || 0) : value}
+          key={ key }
+          title={ headerData.name }
+          type={ type }
+          header={ headerData }
+          fieldValue={ headerData.type === "number" ? String(value || 0) : value }
           onChange={
             (e) => {
-              onChange(e, key, rowId, type, row.original); 
+              onChange( e, key, rowId, type, row.original ); 
             } // ✅ Now uses correct rowId
           }
         >
-          {headerData.name === "Product" ? (
-            <a href={row.original.link}>
-              <img className="products" src={row.original.image} alt="product_image" />
+          { headerData.name === "Product" ? (
+            <a href={ row.original.link }>
+              <img className="products" src={ row.original.image } alt="product_image" />
             </a>
           ) : (
-            <p className={headerData.class} data-id={rowId}>
-              {headerData.type === "number" ? String(value || 0) : value}
+            <p className={ headerData.class } data-id={ rowId }>
+              { headerData.type === "number" ? String(value || 0) : value }
             </p>
           )}
         </TableCell>
@@ -408,35 +407,34 @@ const Managestock:React.FC = () => {
   }));
 
   let tableData: StockDataType[] | null = data;
-  if(data){
+  if( data ){
     tableData = Object.values( data );
-    console.log("tableData", tableData);
   }
 
   return (
     <>
-      {!appLocalizer.khali_dabba ? (
+      { !appLocalizer.khali_dabba ? (
         //If the user is free user he will be shown a Inventory Manager image
         <div className="inventory-manager-wrapper">
           <Dialog
             className="admin-module-popup"
-            open={openDialog}
+            open={ openDialog }
             onClose={() => {
-              setOpenDialog(false);
+              setOpenDialog( false );
             }}
             aria-labelledby="form-dialog-title"
           >
             <span
               className="admin-font adminLib-cross stock-manager-popup-cross"
               onClick={() => {
-                setOpenDialog(false);
+                setOpenDialog( false );
               }}
             ></span>
             <Popup />
           </Dialog>
           <div
             onClick={() => {
-              setOpenDialog(true);
+              setOpenDialog( true );
             }}
             className="inventory-manager"
           ></div>
@@ -447,39 +445,39 @@ const Managestock:React.FC = () => {
         //If user is pro user he will shown the Inventory Manager Table
         <div className="admin-middle-container-wrapper">
           <div className="title-section">
-            <p>{__("Inventory Manager", "woocommerce-stock-manager")}</p>
+            <p>{ __("Inventory Manager", "notifima" ) }</p>
             <div className="stock-reports-download">
               <button className="import-export-btn">
-                <Link to={"?page=stock-manager#&tab=import"}>
+                <Link to={ "?page=stock-manager#&tab=import" }>
                   <div className="wp-menu-image dashicons-before dashicons-download"></div>
-                  {__("Import", "woocommerce-stock-manager")}
+                  { __("Import", "notifima" ) }
                 </Link>
               </button>
               <button className="import-export-btn">
-                <Link to={"?page=stock-manager#&tab=export"}>
+                <Link to={ "?page=stock-manager#&tab=export" }>
                   <div className="wp-menu-image dashicons-before dashicons-upload"></div>
-                  {__("Export", "woocommerce-stock-manager")}
+                  { __("Export", "notifima" ) }
                 </Link>
               </button>
             </div>
-            {displayMessage && (
+            { displayMessage && (
               <div className="admin-notice-display-title">
                 <i className="admin-font adminLib-icon-yes"></i>
-                {displayMessage}
+                { displayMessage }
               </div>
             )}
           </div>
         <CustomTable
-            data={tableData}
-            columns={columns}
-            pageCount={totalPages}
-            pagination={pagination}
-            onPaginationChange={setPagination}
-            realtimeFilter={realtimeFilter}
-            typeCounts={productCount as ProductCountStatus[]}
-            perPageOption={[5,10,20]}
-            handlePagination={requestApiForData}
-            successMsg={successMessage}
+            data={ tableData }
+            columns={ columns }
+            pageCount={ totalPages }
+            pagination={ pagination }
+            onPaginationChange={ setPagination }
+            realtimeFilter={ realtimeFilter }
+            typeCounts={ productCount as ProductCountStatus[] }
+            perPageOption={ [5,10,20] }
+            handlePagination={ requestApiForData }
+            successMsg={ successMessage }
         />
         </div>
       )}

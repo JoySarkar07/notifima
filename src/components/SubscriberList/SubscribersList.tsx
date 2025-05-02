@@ -9,10 +9,12 @@ import { DateRangePicker, RangeKeyDict, Range } from 'react-date-range';
 import axios from "axios";
 import { Dialog } from "@mui/material";
 import { CSVLink } from "react-csv";
+import { __ } from "@wordpress/i18n";
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css'; // theme css file
 import './subscribersList.scss';
 
+// Type declarations
 type SubscriberStatus = {
   key: string;
   name: string;
@@ -42,7 +44,7 @@ export interface RealtimeFilter {
 } 
 
 
-const SubscribersList = () => {
+const SubscribersList:React.FC = () => {
   const fetchSubscribersDataUrl = `${appLocalizer.apiUrl}/notifima/v1/get-subscriber-list`;
   const fetchSubscribersCount = `${appLocalizer.apiUrl}/notifima/v1/get-table-segment`;
   const bulkActionUrl = `${appLocalizer.apiUrl}/notifima/v1/bulk-action`;
@@ -74,6 +76,7 @@ const SubscribersList = () => {
   ]);
 
 
+  // Columns for the table
   const columns: ColumnDef<Subscriber,any>[] = [
     {
       id: 'select',
@@ -249,16 +252,16 @@ const SubscribersList = () => {
   const handleBulkAction = (event:any) => {
     const selectedRows = getSelectedRows(rowSelection, data as Subscriber[]);
     if (!bulkSelectRef.current?.value) {
-      setModalDetails("Please select a action.")
-      setOpenModal(true);
+      setModalDetails( "Please select a action." )
+      setOpenModal( true );
     }
 
     if (!selectedRows.length) {
-      setModalDetails("Please select products.")
-      setOpenModal(true);
+      setModalDetails( "Please select products." )
+      setOpenModal( true );
     }
 
-    setData(null);
+    setData( null );
 
     axios({
       method: "post",
@@ -268,13 +271,13 @@ const SubscribersList = () => {
         action: bulkSelectRef.current?.value,
         subscribers: selectedRows
       },
-    }).then((response) => {
+    }).then( ( response ) => {
       requestData();
     });
   }
 
   const handleClick = () => {
-    if (appLocalizer.khali_dabba) {
+    if ( appLocalizer.khali_dabba ) {
       axios({
         method: "post",
         url: fetchSubscribersDataUrl,
@@ -294,9 +297,8 @@ const SubscribersList = () => {
     }
   }
   
-
+  // Filter for the table
   const realtimeFilter:RealtimeFilter[] = [
-
     {
       name: "bulk-action",
       render: () => {
@@ -304,15 +306,15 @@ const SubscribersList = () => {
           <>
             <div className="subscriber-bulk-action bulk-action">
               <select name="action" ref={bulkSelectRef} >
-                <option value="">{'Bulk Actions'}</option>
-                <option value="unsubscribe">{'Unsubscribe Users'}</option>
-                <option value="delete">{'Delete Users'}</option>
+                <option value="">{ __('Bulk Actions', "notifima") }</option>
+                <option value="unsubscribe">{ __('Unsubscribe Users', "notifima") }</option>
+                <option value="delete">{ __('Delete Users', "notifima") }</option>
               </select>
               <button
                 name="bulk-action-apply"
-                onClick={handleBulkAction}
+                onClick={ handleBulkAction }
               >
-                {'Apply'}
+                { 'Apply' }
               </button>
             </div>
           </>
@@ -322,24 +324,24 @@ const SubscribersList = () => {
     {
       name: "date",
       render: (updateFilter, value) => (
-        <div ref={dateRef}>
+        <div ref={ dateRef }>
           <div className="admin-header-search-section">
-            <input value={`${selectedRange[0].startDate.toLocaleDateString()} - ${selectedRange[0].endDate.toLocaleDateString()}`} onClick={() => handleDateOpen()} className="date-picker-input-custom" type="text" placeholder={"DD/MM/YYYY"} />
+            <input value={ `${ selectedRange[0].startDate.toLocaleDateString() } - ${ selectedRange[0].endDate.toLocaleDateString() }` } onClick={() => handleDateOpen()} className="date-picker-input-custom" type="text" placeholder={"DD/MM/YYYY"} />
           </div>
           {openDatePicker &&
             <div className="date-picker-section-wrapper" id="date-picker-wrapper">
               <DateRangePicker
-                ranges={selectedRange}
-                months={1}
-                direction="vertical"
+                ranges= { selectedRange }
+                months= { 1 }
+                direction= "vertical"
                 scroll={{ enabled: true }}
-                maxDate={new Date()}
-                onChange={(ranges: RangeKeyDict) => {
+                maxDate={ new Date() }
+                onChange={ (ranges: RangeKeyDict) => {
                 const selection: Range = ranges.selection;
 
-                if (selection?.endDate instanceof Date) {
+                if ( selection?.endDate instanceof Date ) {
                   // Set end of day to endDate
-                  selection.endDate.setHours(23, 59, 59, 999);
+                  selection.endDate.setHours( 23, 59, 59, 999 );
                 }
 
                 // Update local range state
@@ -376,19 +378,19 @@ const SubscribersList = () => {
         <>
           <div className="admin-header-search-section search-section">
             <input
-              name="searchField"
-              type="text"
-              placeholder={"Search..."}
-              onChange={(e) => {
-                updateFilter(e.target.name, e.target.value)
-                setFilters((previousfilters) => {
+              name= "searchField"
+              type= "text"
+              placeholder={ __( "Search...", "notifima" ) }
+              onChange={( e ) => {
+                updateFilter( e.target.name, e.target.value )
+                setFilters( ( previousfilters ) => {
                   return {
                     ...previousfilters, 
                     searchField : e.target.value
                   }
                 })
               }}
-              value={filterValue || ""}
+              value={ filterValue || "" }
             />
           </div>
         </>
@@ -398,23 +400,23 @@ const SubscribersList = () => {
       name: "searchAction",
       render: (updateFilter, filterValue) => (
         <>
-          <div className="admin-header-search-section searchAction">
+          <div className= "admin-header-search-section searchAction">
             <select
-              name="searchAction"
-              onChange={(e) => {
-                updateFilter(e.target.name, e.target.value)
-                setFilters((previousfilters) => {
+              name= "searchAction"
+              onChange={( e ) => {
+                updateFilter( e.target.name, e.target.value )
+                setFilters( ( previousfilters ) => {
                   return {
                     ...previousfilters, 
                     searchAction : e.target.value
                   }
                 })
               }}
-              value={filterValue || ""}
+              value={ filterValue || "" }
             >
-              <option value="">All</option>
-              <option value="productField">Product Name</option>
-              <option value="emailField">Email</option>
+              <option value="">{ __( "All", "notifima" ) }</option>
+              <option value="productField">{ __( "Product Name", "notifima" )}</option>
+              <option value="emailField">{ __( "Email", "notifima" )}</option>
             </select>
           </div>
         </>
@@ -429,22 +431,22 @@ const SubscribersList = () => {
           <div className="free-reports-download-section">
             <h2 className="section-heading">{"Download product wise subscriber data."}</h2>
             <button>
-              <a href={appLocalizer.export_button}>{"Download CSV"}</a>
+              <a href={appLocalizer.export_button}>{ __( "Download CSV", "notifima" ) }</a>
             </button>
             <p className="description" dangerouslySetInnerHTML={{ __html: "This CSV file contains all subscriber data from your site. Upgrade to <a href='https://multivendorx.com/woocommerce-product-stock-manager-notifier-pro/?utm_source=wpadmin&utm_medium=pluginsettings&utm_campaign=stockmanager' target='_blank'>WooCommerce Product Stock Manager & Notifier Pro</a> to generate CSV files based on specific products or users." }}></p>
           </div>
           <Dialog
             className="admin-module-popup"
-            open={openDialog}
+            open={ openDialog }
             onClose={() => {
-              setOpenDialog(false);
+              setOpenDialog( false );
             }}
             aria-labelledby="form-dialog-title"
           >
             <span
               className="admin-font adminLib-cross stock-manager-popup-cross"
               onClick={() => {
-                setOpenDialog(false);
+                setOpenDialog( false );
               }}
             ></span>
             <Popup />
@@ -452,7 +454,7 @@ const SubscribersList = () => {
           <div
             className="subscriber-img"
             onClick={() => {
-              setOpenDialog(true);
+              setOpenDialog( true );
             }}>
           </div>
         </div>
@@ -461,41 +463,41 @@ const SubscribersList = () => {
           {openModal && modalDetails &&
             <div className="notice notice-error error-modal">
             <div className="modal-wrapper">
-              <p>{modalDetails}</p>
-              <i onClick={() => setOpenModal(false)} className="admin-font adminLib-cross"></i>
+              <p>{ modalDetails }</p>
+              <i onClick={() => setOpenModal( false )} className="admin-font adminLib-cross"></i>
             </div>
             </div>
           }
           <div className="admin-page-title">
-            <p>{"Subscriber List"}</p>
+            <p>{ __( "Subscriber List", "notifima" ) }</p>
             <div className="download-btn-subscriber-list">
-              <button onClick={handleClick} className="admin-btn btn-purple">
+              <button onClick={ handleClick } className="admin-btn btn-purple">
                 <div className="wp-menu-image dashicons-before dashicons-download"></div>
-                {"Download CSV"}
+                { __( "Download CSV", "notifima" ) }
               </button>
               <CSVLink
-                data={allData.map(({ date, product, email, status }) => ({ date, product, email, status }))}
-                filename={"Subscribers.csv"}
-                className='hidden'
-                ref={csvLink}
+                data={ allData.map(({ date, product, email, status }) => ({ date, product, email, status })) }
+                filename={ __( "Subscribers.csv", "notifima" ) }
+                className= 'hidden'
+                ref={ csvLink }
               />
             </div>
           </div>
 
           {
             <CustomTable
-            data={data}
-            columns={columns as ColumnDef<Record<string, any>, any>[]}
-            rowSelection={rowSelection}
-            onRowSelectionChange={setRowSelection}
-            defaultRowsPerPage={10}
-            realtimeFilter={realtimeFilter}
-            pageCount={pageCount}
-            pagination={pagination}
-            onPaginationChange={setPagination}
-            typeCounts={subscribersStatus as SubscriberStatus[]}
-            handlePagination={requestApiForData}
-            perPageOption={[10, 25, 50]}
+            data={ data }
+            columns={ columns as ColumnDef<Record<string, any>, any>[] }
+            rowSelection={ rowSelection }
+            onRowSelectionChange={ setRowSelection }
+            defaultRowsPerPage={ 10 }
+            realtimeFilter={ realtimeFilter }
+            pageCount={ pageCount }
+            pagination={ pagination }
+            onPaginationChange={ setPagination }
+            typeCounts={ subscribersStatus as SubscriberStatus[] }
+            handlePagination={ requestApiForData }
+            perPageOption={ [10, 25, 50] }
           />
           }
         </div>

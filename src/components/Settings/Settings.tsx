@@ -50,24 +50,24 @@ const supportLink = [
 
 const products:Products[]=[
     {
-        title : "Double Opt-In",
-        description : "Experience the power of Double Opt-In for our Stock Alert Form - Guaranteed precision in every notification!",
+        title : __("Double Opt-In", "notifima"),
+        description : __("Experience the power of Double Opt-In for our Stock Alert Form - Guaranteed precision in every notification!", "notifima"),
     },
     {
-        title : "Your Subscription Hub",
-        description : "Subscription Dashboard - Easily monitor and download lists of out-of-stock subscribers for seamless management.",
+        title : __("Your Subscription Hub", "notifima"),
+        description : __("Subscription Dashboard - Easily monitor and download lists of out-of-stock subscribers for seamless management.", "notifima"),
     },
     {
-        title : "Mailchimp Bridge",
-        description : "Seamlessly link WooCommerce out-of-stock subscriptions with Mailchimp for effective marketing.",
+        title : __("Mailchimp Bridge", "notifima"),
+        description : __("Seamlessly link WooCommerce out-of-stock subscriptions with Mailchimp for effective marketing.", "notifima"),
     },
     {
-        title : "Unsubscribe Notifications",
-        description : "User-Initiated Unsubscribe from In-Stock Notifications.",
+        title : __("Unsubscribe Notifications", "notifima"),
+        description : __("User-Initiated Unsubscribe from In-Stock Notifications.", "notifima"),
     },
     {
-        title : "Ban Spam Emails",
-        description : "Email and Domain Blacklist for Spam Prevention.",
+        title : __("Ban Spam Emails", "notifima"),
+        description : __("Email and Domain Blacklist for Spam Prevention.", "notifima"),
     }
 ];
 
