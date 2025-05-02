@@ -45,9 +45,9 @@ export interface RealtimeFilter {
 
 
 const SubscribersList:React.FC = () => {
-  const fetchSubscribersDataUrl = `${appLocalizer.apiUrl}/notifima/v1/get-subscriber-list`;
-  const fetchSubscribersCount = `${appLocalizer.apiUrl}/notifima/v1/get-table-segment`;
-  const bulkActionUrl = `${appLocalizer.apiUrl}/notifima/v1/bulk-action`;
+  const fetchSubscribersDataUrl = `${ appLocalizer.apiUrl }/notifima/v1/get-subscriber-list`;
+  const fetchSubscribersCount = `${ appLocalizer.apiUrl }/notifima/v1/get-table-segment`;
+  const bulkActionUrl = `${ appLocalizer.apiUrl }/notifima/v1/bulk-action`;
   const [rowSelection, setRowSelection] = useState<Record<string, boolean>>({});
   const dateRef = useRef<HTMLDivElement | null>(null);
   const bulkSelectRef = useRef<HTMLSelectElement>(null);
@@ -136,6 +136,7 @@ const SubscribersList:React.FC = () => {
   }, [postStatus]);
 
   useEffect(() => {
+    if (!appLocalizer.khali_dabba) return;
     const currentPage = pagination.pageIndex + 1;
     const rowsPerPage = pagination.pageSize;
     requestData(
@@ -250,6 +251,7 @@ const SubscribersList:React.FC = () => {
   }
 
   const handleBulkAction = (event:any) => {
+    if (!appLocalizer.khali_dabba) return;
     const selectedRows = getSelectedRows(rowSelection, data as Subscriber[]);
     if (!bulkSelectRef.current?.value) {
       setModalDetails( "Please select a action." )
@@ -429,9 +431,9 @@ const SubscribersList:React.FC = () => {
     {!appLocalizer.khali_dabba ? (
         <div>
           <div className="free-reports-download-section">
-            <h2 className="section-heading">{"Download product wise subscriber data."}</h2>
+            <h2 className="section-heading">{ __( "Download product wise subscriber data.", "notifima") }</h2>
             <button>
-              <a href={appLocalizer.export_button}>{ __( "Download CSV", "notifima" ) }</a>
+              <a href={ appLocalizer.export_button }>{ __( "Download CSV", "notifima" ) }</a>
             </button>
             <p className="description" dangerouslySetInnerHTML={{ __html: "This CSV file contains all subscriber data from your site. Upgrade to <a href='https://multivendorx.com/woocommerce-product-stock-manager-notifier-pro/?utm_source=wpadmin&utm_medium=pluginsettings&utm_campaign=stockmanager' target='_blank'>WooCommerce Product Stock Manager & Notifier Pro</a> to generate CSV files based on specific products or users." }}></p>
           </div>

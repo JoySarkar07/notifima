@@ -1,5 +1,7 @@
 const defaultConfig = require('@wordpress/scripts/config/webpack.config');
 const path = require('path');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const DependencyExtractionWebpackPlugin = require('@wordpress/dependency-extraction-webpack-plugin');
 
 module.exports = {
   ...defaultConfig,
@@ -75,11 +77,11 @@ module.exports = {
       {
         test: /\.scss$/,
         use: [
-          'style-loader',
+          MiniCssExtractPlugin.loader, // 🔄 Replaces 'style-loader'
           {
             loader: 'css-loader',
             options: {
-              url: true, // ✅ Ensures `url()` in SCSS is processed
+              url: true,
               importLoaders: 2,
             },
           },
@@ -97,6 +99,15 @@ module.exports = {
       },
     ],
   },
+  plugins: [
+    new MiniCssExtractPlugin({
+      filename: '[name].css', // 📄 Outputs styles.css in your build folder
+    }),
+    new DependencyExtractionWebpackPlugin({
+      outputFormat: 'php',
+      injectPolyfill: true,
+    }),
+  ],
 
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.jsx'],

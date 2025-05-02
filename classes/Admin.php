@@ -193,7 +193,7 @@ class Admin {
             // wp_enqueue_script( 'notifima-script', Notifima()->plugin_url . 'build/index.js', [ 'wp-element', 'wp-i18n', 'react-jsx-runtime', 'react', 'react-dom' ], Notifima()->version, true );
             // wp_set_script_translations( 'notifima-script', 'notifima' );
             $index_asset = include plugin_dir_path(__FILE__) . '../build/index.asset.php';
-
+            wp_enqueue_script('wp-element');
             wp_enqueue_script(
                 'notifima-script',
                 Notifima()->plugin_url . 'build/index.js',
@@ -260,6 +260,7 @@ class Admin {
             ] ) );
 
             wp_enqueue_style( 'notifima-style', Notifima()->plugin_url . 'build/index.css', [], Notifima()->version );
+            wp_enqueue_style( 'notifima-script-components-style', Notifima()->plugin_url . 'build/components.css', [], Notifima()->version );
         }
         
         wp_enqueue_style( 'notifima-admin-style', Notifima()->plugin_url . 'frontend/css/admin' . '.min' . '.css', [], Notifima()->version );
