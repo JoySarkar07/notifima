@@ -5,7 +5,7 @@
     "category": "woocommerce",
     "icon": "clipboard",
     "textdomain": "notifima",
-    "editorScript": [ "file:./index.js", "notifima-frontend-script" ],
-    "script": [ "file:./index.js", "notifima-frontend-script" ],
+    "editorScript": "file:../../build/stock-notification-block/index.js",
+    "script": "file:../../build/index.js",
     "render": "file:./render.php"
 }

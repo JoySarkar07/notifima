@@ -192,18 +192,19 @@ class Admin {
         if ( get_current_screen()->id == 'toplevel_page_notifima' ) {
             // wp_enqueue_script( 'notifima-script', Notifima()->plugin_url . 'build/index.js', [ 'wp-element', 'wp-i18n', 'react-jsx-runtime', 'react', 'react-dom' ], Notifima()->version, true );
             // wp_set_script_translations( 'notifima-script', 'notifima' );
-            $index_asset = include plugin_dir_path(__FILE__) . '../build/index.asset.php';
+            $index_asset = include plugin_dir_path(__FILE__) . '../assets/js/index.asset.php';
             wp_enqueue_script('wp-element');
+            
             wp_enqueue_script(
                 'notifima-script',
-                Notifima()->plugin_url . 'build/index.js',
+                Notifima()->plugin_url . 'assets/js/index.js',
                 $index_asset['dependencies'],
                 $index_asset['version'],
                 true
             );
 
-            $chunks_dir = plugin_dir_path(__FILE__) . '../build/';
-            $chunks_url = plugin_dir_url(__FILE__) . '../build/';
+            $chunks_dir = plugin_dir_path(__FILE__) . '../assets/js/';
+            $chunks_url = plugin_dir_url(__FILE__) . '../assets/js/';
 
             $js_files = glob($chunks_dir . '*.js');
 
@@ -234,7 +235,7 @@ class Admin {
             // Enqueue components.js
             wp_enqueue_script(
                 'notifima-script-components',
-                plugin_dir_url(__FILE__) . 'build/components.js',
+                plugin_dir_url(__FILE__) . 'assets/js/components.js',
                 ['notifima-script-vendor'], // Optional dependency
                 '1.0.0',
                 true
@@ -255,8 +256,8 @@ class Admin {
                 'is_recaptcha_enable_pro'   => __('Enable this to prevent automated bots from submitting forms. Get your v3 reCAPTCHA site key and secret key from <a href="https://developers.google.com/recaptcha" target="_blank">here</a>.', 'notifima'),
             ] ) );
 
-            wp_enqueue_style( 'notifima-style', Notifima()->plugin_url . 'build/index.css', [], Notifima()->version );
-            wp_enqueue_style( 'notifima-script-components-style', Notifima()->plugin_url . 'build/components.css', [], Notifima()->version );
+            wp_enqueue_style( 'notifima-style', Notifima()->plugin_url . 'assets/styles/index.css', [], Notifima()->version );
+            wp_enqueue_style( 'notifima-script-components-style', Notifima()->plugin_url . 'assets/styles/components.css', [], Notifima()->version );
         }
         
         wp_enqueue_style( 'notifima-admin-style', Notifima()->plugin_url . 'frontend/css/admin' . '.min' . '.css', [], Notifima()->version );

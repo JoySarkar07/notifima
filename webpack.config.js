@@ -8,12 +8,13 @@ module.exports = {
 
   entry: {
     index: './src/index.tsx',
+    'block/stock-notification-block/index': './src/block/stock-notification-block/index.tsx',
   },
 
   output: {
     ...defaultConfig.output,
-    path: path.resolve(__dirname, 'build'),
-    filename: '[name].js',
+    path: path.resolve(__dirname, 'assets'),
+    filename: 'js/[name].js',
     chunkFilename: 'chunks/[name].[contenthash].js',
     clean: true,
   },
@@ -71,7 +72,7 @@ module.exports = {
         test: /\.(png|jpe?g|gif|svg)$/i,
         type: 'asset/resource', // ✅ Replace file-loader with Webpack 5's built-in handling
         generator: {
-          filename: 'assets/images/[name][hash][ext]', // ✅ Output folder and name pattern
+          filename: 'images/[name][hash][ext]', // ✅ Output folder and name pattern
         },
       },
       {
@@ -97,11 +98,18 @@ module.exports = {
         ],
         include: path.resolve(__dirname, './src'),
       },
+      {
+        test: /\.(woff(2)?|ttf|eot|otf)$/i,
+        type: 'asset/resource',
+        generator: {
+          filename: 'fonts/[name][hash][ext][query]'
+        }
+      }
     ],
   },
   plugins: [
     new MiniCssExtractPlugin({
-      filename: '[name].css', // 📄 Outputs styles.css in your build folder
+      filename: 'styles/[name].css', 
     }),
     new DependencyExtractionWebpackPlugin({
       outputFormat: 'php',
