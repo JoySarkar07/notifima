@@ -2,6 +2,7 @@ const defaultConfig = require('@wordpress/scripts/config/webpack.config');
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const DependencyExtractionWebpackPlugin = require('@wordpress/dependency-extraction-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   ...defaultConfig,
@@ -29,9 +30,9 @@ module.exports = {
           test: /[\\/]node_modules[\\/]/,
           name(module) {
             const packagePath = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/);
-            if (!packagePath) return 'vendor'; // fallback
+            if (!packagePath) return 'externals/vendor'; // fallback
             const packageName = packagePath[1].replace('@', '').replace('/', '-');
-            return `vendor-${packageName}`;
+            return `externals/vendor-${packageName}`;
           },
           chunks: 'all',
           priority: -10,
@@ -96,10 +97,9 @@ module.exports = {
           },
           'sass-loader',
         ],
-        include: path.resolve(__dirname, './src'),
       },
       {
-        test: /\.(woff(2)?|ttf|eot|otf)$/i,
+        test: /\.(woff(2)?|ttf|eot|otf|svg)$/i,
         type: 'asset/resource',
         generator: {
           filename: 'fonts/[name][hash][ext][query]'
@@ -115,10 +115,19 @@ module.exports = {
       outputFormat: 'php',
       injectPolyfill: true,
     }),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: path.resolve(__dirname, 'node_modules/zyra/build/assets/fonts'),
+          to: path.resolve(__dirname, 'dist/fonts')
+        }
+      ]
+    })
   ],
 
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
+    modules: ['node_modules' ],
     alias: {
       '@': path.resolve(__dirname, './src'), // So you can use "@/assets/..." in SCSS or imports
     },

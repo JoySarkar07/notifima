@@ -13,6 +13,7 @@ import { __ } from "@wordpress/i18n";
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css'; // theme css file
 import './subscribersList.scss';
+import 'zyra/build/index.css';
 
 // Type declarations
 type SubscriberStatus = {
@@ -477,6 +478,8 @@ const SubscribersList:React.FC = () => {
               <button onClick={ handleClick } className="admin-btn btn-purple">
                 <div className="wp-menu-image dashicons-before dashicons-download"></div>
                 { __( "Download CSV", "notifima" ) }
+                <i className="admin-font adminLib-icon-yes"></i>
+                <i className="admin-font adminLib-icon-yes"></i>
               </button>
               <CSVLink
                 data={ allData.map(({ date, product, email, status }) => ({ date, product, email, status })) }

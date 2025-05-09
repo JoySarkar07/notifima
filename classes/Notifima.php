@@ -213,7 +213,20 @@ class Notifima {
     public static function woocommerce_admin_notice() {
         ?>
         <div id="message" class="error">
-            <p><?php printf(__('%sNotifima is inactive.%s The %sWooCommerce plugin%s must be active for the Notifima to work. Please %sinstall & activate WooCommerce%s', 'notifima'), '<strong>', '</strong>', '<a target="_blank" href="http://wordpress.org/extend/plugins/woocommerce/">', '</a>', '<a href="' . admin_url('plugins.php') . '">', ' &raquo;</a>'); ?></p>
+            <p>
+                <?php 
+                    printf(
+                        // translators: 1: Opening strong tag, 2: Closing strong tag, 3: Opening WooCommerce link, 4: Closing link, 5: Opening install link, 6: Closing install link.
+                        __('%1$sNotifima is inactive.%2$s The %3$sWooCommerce plugin%4$s must be active for the Notifima to work. Please %5$sinstall & activate WooCommerce%6$s', 'notifima'), 
+                        '<strong>', 
+                        '</strong>', 
+                        '<a target="_blank" href="http://wordpress.org/extend/plugins/woocommerce/">', 
+                        '</a>', 
+                        '<a href="' . admin_url('plugins.php') . '">', 
+                        ' &raquo;</a>'
+                    ); 
+                ?>
+            </p>
         </div>
         <?php
     }
