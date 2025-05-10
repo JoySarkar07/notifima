@@ -1,0 +1,20 @@
+For create the composer file 
+
+#command
+1. composer init \
+  --name="multivendorx/notifima" \
+  --description="Boost sales with real-time stock alerts! Notify customers instantly when products are back in stock. Simplify data management by exporting and importing stock data with ease." \
+  --author="MultiVendorX <contact@multivendorx.com>" \
+  --type="wordpress-plugin" \
+  --homepage="https://notifima.com" \
+  --stability="dev" \
+  --license="GPL-2.0-or-later"
+
+2. add autoloader manually
+"autoload": {
+        "psr-4": {
+            "Notifima\\": "classes/"
+        }
+    },
+
+3. composer dump-autoload

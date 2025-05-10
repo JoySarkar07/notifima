@@ -21,11 +21,11 @@ class Block {
         $blocks[] = [
             'name' => 'stock-notification-block', // block name
             'textdomain' => 'notifima',
-            'block_path' => Notifima()->plugin_path . 'build/block/',
+            'block_path' => Notifima()->plugin_path . 'assets/block/',
         ];
 
         Notifima()->block_paths += [
-            'block/stock-notification-block' => 'build/block/stock-notification-block/index.js',
+            'block/stock-notification-block' => 'assets/block/stock-notification-block/index.js',
         ];
 
         return apply_filters('notifima_initialize_blocks', $blocks);

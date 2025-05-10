@@ -190,29 +190,21 @@ class Admin {
         }
         
         if ( get_current_screen()->id == 'toplevel_page_notifima' ) {
-            // wp_enqueue_script( 'notifima-script', Notifima()->plugin_url . 'build/index.js', [ 'wp-element', 'wp-i18n', 'react-jsx-runtime', 'react', 'react-dom' ], Notifima()->version, true );
-            // wp_set_script_translations( 'notifima-script', 'notifima' );
             $index_asset = include plugin_dir_path(__FILE__) . '../assets/js/index.asset.php';
+            $index_asset_597 = include plugin_dir_path(__FILE__) . '../assets/js/597.asset.php';
+            
             wp_enqueue_script('wp-element');
             
-            wp_enqueue_script(
-                'notifima-script',
-                Notifima()->plugin_url . 'assets/js/index.js',
-                $index_asset['dependencies'],
-                $index_asset['version'],
-                true
-            );
-
-            $chunks_dir = plugin_dir_path(__FILE__) . '../assets/js/';
-            $chunks_url = plugin_dir_url(__FILE__) . '../assets/js/';
-
+            // Enqueue all chunk files (External dependencies)
+            $chunks_dir = plugin_dir_path(__FILE__) . '../assets/js/externals/';
+            $chunks_url = Notifima()->plugin_url . 'assets/js/externals/';
             $js_files = glob($chunks_dir . '*.js');
 
             foreach ($js_files as $chunk_path) {
                 $chunk_file = basename($chunk_path);
+                error_log("Chunk file name : ".print_r($chunk_file, true));
                 $chunk_handle = 'notifima-script-' . sanitize_title($chunk_file);
-
-                $asset_file = $chunk_path . '.asset.php';
+                $asset_file = str_replace('.js', '.asset.php', $chunk_path);
                 $deps = [];
                 $version = filemtime($chunk_path);
 
@@ -231,15 +223,26 @@ class Admin {
                 );
             }
 
-            
-            // Enqueue components.js
+            // Enqueue Components chunk file
             wp_enqueue_script(
                 'notifima-script-components',
-                plugin_dir_url(__FILE__) . 'assets/js/components.js',
-                ['notifima-script-vendor'], // Optional dependency
-                '1.0.0',
+                Notifima()->plugin_url . 'assets/js/components.js',
+                'wp-polyfill', // Optional dependency
+                '89626b0d93e8f7b79b09',
                 true
             );
+
+            wp_enqueue_script(
+                'notifima-script',
+                Notifima()->plugin_url . 'assets/js/index.js',
+                $index_asset['dependencies'],
+                $index_asset['version'],
+                true
+            );
+            
+            // Enqueue components.js
+            
+            error_log("components.js enqueued");
             wp_localize_script( 'notifima-script', 'appLocalizer', apply_filters( 'notifima_admin_localize_scripts', [ 
                 'apiUrl'                    => untrailingslashit( get_rest_url() ),
                 'restUrl'                   => Notifima()->rest_namespace,
@@ -262,7 +265,8 @@ class Admin {
             wp_enqueue_style( 'notifima-script-components-style', Notifima()->plugin_url . 'assets/styles/components.css', [], Notifima()->version );
         }
         
-        wp_enqueue_style( 'notifima-admin-style', Notifima()->plugin_url . 'frontend/css/admin' . '.min' . '.css', [], Notifima()->version );
+        wp_enqueue_style( 'notifima-admin-style', Notifima()->plugin_url . 'assets/styles/notifima-admin' . '.min' . '.css', [], Notifima()->version );
+        error_log("all enque finished");
     }
 
     /**

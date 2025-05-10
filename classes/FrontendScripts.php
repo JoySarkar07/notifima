@@ -27,9 +27,11 @@ class FrontendScripts {
 		$version = Notifima()->version;
         $suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
+        error_log("FrontendUrl : ".print_r(Notifima()->plugin_url . 'assets/js/notifima-frontend' . $suffix . '.js', true));
+
 		$register_scripts = apply_filters('notifima_register_scripts', array(
 			'notifima-frontend-script' => [
-				'src'     => Notifima()->plugin_url . 'frontend/js/frontend' . $suffix . '.js',
+				'src'     => Notifima()->plugin_url . 'assets/js/notifima-frontend' . $suffix . '.js',
 				'deps'    => [ 'jquery', 'wp-element', 'wp-components' ],
 				'version' => $version,
                 'text_domain' => 'notifima'
@@ -46,7 +48,7 @@ class FrontendScripts {
 
 		$register_styles = apply_filters('notifima_register_styles', [
 			'notifima-frontend-style'   => [
-				'src'     => Notifima()->plugin_url . 'frontend/css/frontend' . $suffix . '.css',
+				'src'     => Notifima()->plugin_url . 'assets/styles/notifima-frontend' . $suffix . '.css',
 				'deps'    => array(),
 				'version' => $version,
             ]
