@@ -1,9 +1,9 @@
 const fs = require( "fs-extra" );
-const path = require( "path" );
+// const path = require( "path" );
 const { exec } = require( "child_process" );
 const chalk = require( "chalk" );
-const _ = require( "lodash" );
-const glob = require( "glob" );
+// const _ = require( "lodash" );
+// const glob = require( "glob" );
 
 /**
  * Put the folder and files that is needed in the production. ( path start from the root of the project './' )
@@ -106,12 +106,12 @@ exec(
             {
                 cwd: "release",
             },
-            ( error ) => {
-                if ( error ) {
+            ( ziperror ) => {
+                if ( ziperror ) {
                     console.log(
                         chalk.red( `❌ Could not make ${ zipFile }.` )
                     );
-                    console.log( chalk.bgRed.black( error ) );
+                    console.log( chalk.bgRed.black( ziperror ) );
 
                     return;
                 }

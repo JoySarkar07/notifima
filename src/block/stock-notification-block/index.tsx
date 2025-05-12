@@ -1,6 +1,5 @@
-import { registerBlockType } from "@wordpress/blocks";
+import { registerBlockType, BlockEditProps } from "@wordpress/blocks";
 import { useBlockProps } from "@wordpress/block-editor";
-import { BlockEditProps } from "@wordpress/blocks";
 import { __ } from "@wordpress/i18n";
 import { useState, useEffect } from "@wordpress/element";
 import { useSelect } from "@wordpress/data";
@@ -13,6 +12,54 @@ interface StockNotificationBlockAttributes {
 declare const stockNotificationBlock: {
     apiUrl: string;
     restUrl: string;
+};
+
+const EditBlock = ( {
+    attributes,
+    setAttributes,
+}: BlockEditProps< StockNotificationBlockAttributes > ) => {
+    const blockProps = useBlockProps();
+    const [ formHtml, setFormHtml ] = useState< string >(
+        // eslint-disable-next-line @wordpress/i18n-ellipsis
+        __( "Loading form...", "notifima" )
+    );
+
+    const productId = useSelect( ( select: any ): number | null => {
+        const blocks = select( "core/block-editor" ).getBlocks();
+        const singleProductBlock = blocks.find(
+            ( block: any ) => block.name === "woocommerce/single-product"
+        );
+        return singleProductBlock?.attributes?.productId ?? null;
+    }, [] );
+
+    useEffect( () => {
+        if ( productId && productId !== attributes.productId ) {
+            setAttributes( { productId } );
+        }
+    }, [ productId, attributes.productId, setAttributes ] );
+
+    useEffect( () => {
+        if ( productId ) {
+            axios
+                .get(
+                    `${ stockNotificationBlock.apiUrl }/${ stockNotificationBlock.restUrl }/stock-notification-form?product_id=${ productId }`
+                )
+                .then( ( response ) => {
+                    setFormHtml(
+                        response.data.html ||
+                            __( "Failed to load form.", "notifima" )
+                    );
+                } );
+        } else {
+            setFormHtml( __( "No product selected.", "notifima" ) );
+        }
+    }, [ productId ] );
+
+    return (
+        <div { ...blockProps }>
+            <div dangerouslySetInnerHTML={ { __html: formHtml } } />
+        </div>
+    );
 };
 
 registerBlockType< StockNotificationBlockAttributes >(
@@ -35,56 +82,7 @@ registerBlockType< StockNotificationBlockAttributes >(
             },
         },
 
-        edit: ( {
-            attributes,
-            setAttributes,
-        }: BlockEditProps< StockNotificationBlockAttributes > ) => {
-            const blockProps = useBlockProps();
-            const [ formHtml, setFormHtml ] = useState< string >(
-                __( "Loading form...", "notifima" )
-            );
-
-            // Select the product ID from the WooCommerce Single Product Block
-            const productId = useSelect( ( select: any ): number | null => {
-                const blocks = select( "core/block-editor" ).getBlocks();
-                const singleProductBlock = blocks.find(
-                    ( block: any ) =>
-                        block.name === "woocommerce/single-product"
-                );
-                return singleProductBlock?.attributes?.productId ?? null;
-            }, [] );
-
-            // Update the product ID attribute if it changes
-            useEffect( () => {
-                if ( productId && productId !== attributes.productId ) {
-                    setAttributes( { productId } );
-                }
-            }, [ productId ] );
-
-            // Fetch the rendered form from the REST API
-            useEffect( () => {
-                if ( productId ) {
-                    axios
-                        .get(
-                            `${ stockNotificationBlock.apiUrl }/${ stockNotificationBlock.restUrl }/stock-notification-form?product_id=${ productId }`
-                        )
-                        .then( ( response ) => {
-                            setFormHtml(
-                                response.data.html ||
-                                    __( "Failed to load form.", "notifima" )
-                            );
-                        } );
-                } else {
-                    setFormHtml( __( "No product selected.", "notifima" ) );
-                }
-            }, [ productId ] );
-
-            return (
-                <div { ...blockProps }>
-                    <div dangerouslySetInnerHTML={ { __html: formHtml } } />
-                </div>
-            );
-        },
+        edit: EditBlock,
 
         save: () => {
             // Save function remains empty since rendering is handled by the PHP render callback

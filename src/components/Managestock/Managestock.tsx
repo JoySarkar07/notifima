@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, ReactNode } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { CustomTable, TableCell } from "zyra";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
@@ -117,6 +117,7 @@ const Managestock: React.FC = () => {
                         <input
                             name="searchField"
                             type="text"
+                            // eslint-disable-next-line @wordpress/i18n-ellipsis
                             placeholder={ __( "Search...", "notifima" ) }
                             onChange={ ( e ) => {
                                 updateFilter( e.target.name, e.target.value );
@@ -183,34 +184,34 @@ const Managestock: React.FC = () => {
                 {
                     key: "all",
                     name: "All",
-                    count: responseData[ "all" ],
+                    count: responseData.all,
                 },
                 {
                     key: "instock",
                     name: "In stock",
-                    count: responseData[ "instock" ],
+                    count: responseData.instock,
                 },
                 {
                     key: "onbackorder",
                     name: "On backorder",
-                    count: responseData[ "onbackorder" ],
+                    count: responseData.onbackorder,
                 },
                 {
                     key: "outofstock",
                     name: "Out of stock",
-                    count: responseData[ "outofstock" ],
+                    count: responseData.outofstock,
                 },
             ] );
         } );
-    }, [ stockChanged.current ] );
+    }, [ stockChanged.current, segmentDataUrl ] );
 
     function requestData(
         rowsPerPage = 10,
         currentPage = 1,
-        product_name: string | null,
-        product_sku: string | null,
-        product_type: string = "",
-        stock_status: string = ""
+        productName: string | null,
+        productSku: string | null,
+        productType: string = "",
+        stockStatus: string = ""
     ) {
         //Fetch the data to show in the table
         setData( null );
@@ -221,14 +222,14 @@ const Managestock: React.FC = () => {
             params: {
                 page: currentPage,
                 row: rowsPerPage,
-                product_name: product_name ? product_name : null,
-                product_sku: product_sku ? product_sku : null,
-                product_type: product_type,
-                stock_status: stock_status,
+                product_name: productName || null,
+                product_sku: productSku || null,
+                product_type: productType,
+                stock_status: stockStatus,
             },
         } ).then( ( response ) => {
-            const data = JSON.parse( response.data );
-            setData( data.products );
+            const productData = JSON.parse( response.data );
+            setData( productData.products );
         } );
     }
 
@@ -265,25 +266,32 @@ const Managestock: React.FC = () => {
                 page: pagination.pageIndex + 1,
                 row: pagination.pageSize,
                 product_name:
-                    filter.searchAction == "productName"
+                    filter.searchAction === "productName"
                         ? filter.searchField
                         : null,
                 product_sku:
-                    filter.searchAction == "productSku"
+                    filter.searchAction === "productSku"
                         ? filter.searchField
                         : null,
                 product_type: filter.searchProductType,
                 stock_status: filter.typeCount,
             },
         } ).then( ( response ) => {
-            let parsedData = JSON.parse( response.data );
+            const parsedData = JSON.parse( response.data );
             setData( parsedData.products );
             setHeaders( parsedData.headers );
             setTotalPages(
                 Math.ceil( parsedData.total_products / pagination.pageSize )
             );
         } );
-    }, [ pagination ] );
+    }, [
+        pagination,
+        fetchDataUrl,
+        filter.searchAction,
+        filter.searchField,
+        filter.searchProductType,
+        filter.typeCount,
+    ] );
 
     const updateData = ( id: string, name: string, value: any ) => {
         if ( ! id ) {
@@ -299,7 +307,7 @@ const Managestock: React.FC = () => {
                 value: String( value ),
             },
         } )
-            .then( ( response ) => {
+            .then( () => {
                 setSuccessMessage(
                     __( "Data updated successfully!", "notifima" )
                 );
@@ -307,7 +315,7 @@ const Managestock: React.FC = () => {
                     setSuccessMessage( __( "", "notifima" ) );
                 }, 2000 );
             } )
-            .catch( ( error ) => {
+            .catch( () => {
                 setSuccessMessage( __( "Error updating data!", "notifima" ) );
                 setTimeout( () => {
                     setSuccessMessage( __( "", "notifima" ) );

@@ -82,8 +82,8 @@ const Import = () => {
             .map( ( row ) => {
                 const values = row.split( delim );
                 const eachObject = headers.reduce< Record< string, string > >(
-                    ( obj, header, i ) => {
-                        obj[ header.trim() ] = ( values[ i ] ?? "" ).trim();
+                    ( obj, headerData, i ) => {
+                        obj[ headerData.trim() ] = ( values[ i ] ?? "" ).trim();
                         return obj;
                     },
                     {}

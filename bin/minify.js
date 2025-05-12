@@ -9,7 +9,7 @@ const chalk = require( "chalk" );
  * This is the list of folders where the .js and .css files are present.
  * format: (path start from the root of the project './')
  * 1. 'dist' (directory)
- *  */
+ */
 const sourceFolders = [ "scripts" ];
 
 let outputFolder;

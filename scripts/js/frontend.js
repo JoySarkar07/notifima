@@ -1,6 +1,7 @@
 "use strict";
 
 // On page load
+/* global jQuery, localizeData */
 jQuery( function ( $ ) {
     /**
      * Init event listener on page loading.
@@ -29,35 +30,33 @@ jQuery( function ( $ ) {
          * Subscriber form dom objects
          * @var {object} dom objects
          */
-        let form = $( this ).closest( ".notifima-subscribe-form" );
+        const form = $( this ).closest( ".notifima-subscribe-form" );
 
         // Set button as processing and disable click event.
         $( this ).text( localizeData.processing );
         $( this ).addClass( "stk_disabled" );
 
-        const recaptcha_enabled = localizeData.recaptcha_enabled;
+        const recaptchaEnabled = localizeData.recaptcha_enabled;
 
         // Recaptcha is enabled validate recaptcha then process form
-        if ( recaptcha_enabled ) {
-            const recaptcha_secret = form
-                .find( "#recaptchav3_secretkey" )
-                .val();
-            const recaptcha_response = form
+        if ( recaptchaEnabled ) {
+            const recaptchaSecret = form.find( "#recaptchav3_secretkey" ).val();
+            const recaptchaResponse = form
                 .find( "#recaptchav3_response" )
                 .val();
 
             // Prepare recaptcha request data.
-            const recaptcha_request = {
+            const recaptchRequest = {
                 action: "recaptcha_validate_ajax",
                 nonce: localizeData.nonce,
-                recaptcha_secret: recaptcha_secret,
-                recaptcha_response: recaptcha_response,
+                recaptcha_secret: recaptchaSecret,
+                recaptcha_response: recaptchaResponse,
             };
 
             // Request for recaptcha validation
             $.post(
                 localizeData.ajax_url,
-                recaptcha_request,
+                recaptchRequest,
                 function ( response ) {
                     // If valid response process form submition.
                     if ( response ) {
@@ -80,22 +79,22 @@ jQuery( function ( $ ) {
      */
     function processForm( form ) {
         // Get data from form.
-        let customerEmail = form.find( ".notifima-email" ).val();
-        let productId = form.find( ".current-product-id" ).val();
-        let variationId = form.find( ".current-variation-id" ).val();
-        let productTitle = form.find( ".current-product-name" ).val();
+        const customerEmail = form.find( ".notifima-email" ).val();
+        const productId = form.find( ".current-product-id" ).val();
+        const variationId = form.find( ".current-variation-id" ).val();
+        const productTitle = form.find( ".current-product-name" ).val();
 
         // Get data from localizer
-        let buttonHtml = localizeData.button_html;
+        const buttonHtml = localizeData.button_html;
         let successMessage = localizeData.alert_success;
-        let errorMessage = localizeData.error_occurs;
-        let tryAgainMessage = localizeData.try_again;
+        const errorMessage = localizeData.error_occurs;
+        const tryAgainMessage = localizeData.try_again;
         let emailExist = localizeData.alert_email_exist;
-        let validEmail = localizeData.valid_email;
-        let banEmailDomin = localizeData.ban_email_domain_text;
-        let banEmailAddress = localizeData.ban_email_address_text;
-        let doubleOptInText = localizeData.double_opt_in_success;
-        let unsubButtonHtml = localizeData.unsubscribe_button;
+        const validEmail = localizeData.valid_email;
+        const banEmailDomin = localizeData.ban_email_domain_text;
+        const banEmailAddress = localizeData.ban_email_address_text;
+        const doubleOptInText = localizeData.double_opt_in_success;
+        const unsubButtonHtml = localizeData.unsubscribe_button;
 
         // Prepare success message
         successMessage = successMessage.replace(
@@ -115,7 +114,7 @@ jQuery( function ( $ ) {
             $( this ).toggleClass( "alert_loader" ).blur();
 
             // Request data for subscription
-            let requestData = {
+            const requestData = {
                 action: "alert_ajax",
                 nonce: localizeData.nonce,
                 customer_email: customerEmail,
@@ -131,29 +130,29 @@ jQuery( function ( $ ) {
             // Request for subscription
             $.post( localizeData.ajax_url, requestData, function ( response ) {
                 // Handle response
-                if ( response == "0" ) {
+                if ( response === "0" ) {
                     form.html(
                         `<div class="registered-message"> ${ errorMessage } <a href="${ window.location }"> ${ tryAgainMessage } </a></div>`
                     );
-                } else if ( response == "/*?%already_registered%?*/" ) {
+                } else if ( response === "/*?%already_registered%?*/" ) {
                     form.html(
                         `<div class="registered-message">${ emailExist }</div>${ unsubButtonHtml }<input type="hidden" class="subscribed_email" value="${ customerEmail }" /><input type="hidden" class="product_id" value="${ productId }" /><input type="hidden" class="variation_id" value="${ variationId }" />`
                     );
-                } else if ( response == "/*?%ban_email_address%?*/" ) {
+                } else if ( response === "/*?%ban_email_address%?*/" ) {
                     form.find( `.responsedata-error-message` ).remove() &&
                         form.append(
                             $(
                                 `<p class="responsedata-error-message ban-email-address">${ banEmailAddress }</p>`
                             )
                         );
-                } else if ( response == "/*?%ban_email_domain%?*/" ) {
+                } else if ( response === "/*?%ban_email_domain%?*/" ) {
                     form.find( `.responsedata-error-message` ).remove() &&
                         form.append(
                             $(
                                 `<p class="responsedata-error-message ban-email-address">${ banEmailDomin }</p>`
                             )
                         );
-                } else if ( response == "/*?%double_opt_in%?*/" ) {
+                } else if ( response === "/*?%double_opt_in%?*/" ) {
                     form.html(
                         `<div class="registered-message"> ${ doubleOptInText }</div>`
                     );
@@ -188,14 +187,14 @@ jQuery( function ( $ ) {
          * Subscriber form dom objects
          * @var {object} dom objects
          */
-        let form = $( this ).parent().parent();
+        const form = $( this ).parent().parent();
 
         // Set button as processing and disable click event.
         $( this ).text( localizeData.processing );
         $( this ).addClass( "stk_disabled" );
 
         // Unsubscribe request data
-        const unsubscribe_request = {
+        const unsubscribeRequest = {
             action: "unsubscribe_button",
             nonce: localizeData.nonce,
             customer_email: form.find( ".subscribed_email" ).val(),
@@ -204,26 +203,26 @@ jQuery( function ( $ ) {
         };
 
         // Prepare success message on subscribe.
-        let success_message = localizeData.alert_unsubscribe_message;
-        success_message = success_message.replace(
+        let successMessage = localizeData.alert_unsubscribe_message;
+        successMessage = successMessage.replace(
             "%customer_email%",
-            unsubscribe_request.customer_email
+            unsubscribeRequest.customer_email
         );
-        let error_message = localizeData.error_occurs;
+        const errorMessage = localizeData.error_occurs;
 
         // Request for unsubscribe user.
         $.post(
             localizeData.ajax_url,
-            unsubscribe_request,
+            unsubscribeRequest,
             function ( response ) {
                 // unsubscribe success
                 if ( response ) {
                     form.html(
-                        `<div class="registered-message"> ${ success_message }</div>`
+                        `<div class="registered-message"> ${ successMessage }</div>`
                     );
                 } else {
                     form.html(
-                        `<div class="registered-message"> ${ error_message }<a href="${ window.location }"> ${ localizeData.try_again }</a></div>`
+                        `<div class="registered-message"> ${ errorMessage }<a href="${ window.location }"> ${ localizeData.try_again }</a></div>`
                     );
                 }
 

@@ -10,7 +10,7 @@ const path = require( "path" );
  * format: (path start from the root of the project './')
  * 1. 'dist' (directory)
  * 2. 'junk/junk.js' (file)
- *  */
+ */
 const targetFiles = [ "dist" ];
 
 const { name } = JSON.parse( fs.readFileSync( "package.json" ) );

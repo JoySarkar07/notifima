@@ -20,8 +20,8 @@ targetFiles.forEach( ( file, ind ) => {
     const rule = dest[ ind ].rule;
 
     if ( rule === "moveNum" ) {
-        files.forEach( ( file ) => {
-            const fullPath = path.resolve( file );
+        files.forEach( ( subfile ) => {
+            const fullPath = path.resolve( subfile );
             const basename = path.basename( fullPath );
 
             if ( basename.match( /^\d+/ ) ) {
@@ -33,7 +33,7 @@ targetFiles.forEach( ( file, ind ) => {
                     } else {
                         console.log(
                             chalk.greenBright(
-                                `File moved: ${ file } → ${ destPath }`
+                                `File moved: ${ subfile } → ${ destPath }`
                             )
                         );
                     }
