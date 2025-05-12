@@ -1,83 +1,94 @@
-import { registerBlockType } from '@wordpress/blocks';
-import { useBlockProps } from '@wordpress/block-editor';
-import { BlockEditProps } from '@wordpress/blocks';
-import { __ } from '@wordpress/i18n';
-import { useState, useEffect } from '@wordpress/element';
-import { useSelect } from '@wordpress/data';
-import axios from 'axios';
+import { registerBlockType } from "@wordpress/blocks";
+import { useBlockProps } from "@wordpress/block-editor";
+import { BlockEditProps } from "@wordpress/blocks";
+import { __ } from "@wordpress/i18n";
+import { useState, useEffect } from "@wordpress/element";
+import { useSelect } from "@wordpress/data";
+import axios from "axios";
 
 interface StockNotificationBlockAttributes {
-	productId: number | null;
+    productId: number | null;
 }
 
 declare const stockNotificationBlock: {
-	apiUrl: string;
-	restUrl: string;
+    apiUrl: string;
+    restUrl: string;
 };
 
-registerBlockType<StockNotificationBlockAttributes>('notifima/stock-notification-block', {
-	title: __('Stock Notification Block', 'notifima'),
-	description: __(
-		'This block can be connected to WooCommerce Out-of-Stock and Backorder products to provide a stock notification form for users.',
-		'notifima'
-	),
-	category: 'woocommerce',
-	icon: 'clipboard',
-	supports: {
-		html: false,
-	},
-	attributes: {
-		productId: {
-			type: 'number',
-			default: undefined,
-		},
-	},
+registerBlockType< StockNotificationBlockAttributes >(
+    "notifima/stock-notification-block",
+    {
+        title: __( "Stock Notification Block", "notifima" ),
+        description: __(
+            "This block can be connected to WooCommerce Out-of-Stock and Backorder products to provide a stock notification form for users.",
+            "notifima"
+        ),
+        category: "woocommerce",
+        icon: "clipboard",
+        supports: {
+            html: false,
+        },
+        attributes: {
+            productId: {
+                type: "number",
+                default: undefined,
+            },
+        },
 
-	edit: ({ attributes, setAttributes }: BlockEditProps<StockNotificationBlockAttributes>) => {
-		const blockProps = useBlockProps();
-		const [formHtml, setFormHtml] = useState<string>(__('Loading form...', 'notifima'));
+        edit: ( {
+            attributes,
+            setAttributes,
+        }: BlockEditProps< StockNotificationBlockAttributes > ) => {
+            const blockProps = useBlockProps();
+            const [ formHtml, setFormHtml ] = useState< string >(
+                __( "Loading form...", "notifima" )
+            );
 
-		// Select the product ID from the WooCommerce Single Product Block
-		const productId = useSelect(
-			(select: any): number | null => {
-				const blocks = select('core/block-editor').getBlocks();
-				const singleProductBlock = blocks.find(
-					(block: any) => block.name === 'woocommerce/single-product'
-				);
-				return singleProductBlock?.attributes?.productId ?? null;
-			},
-			[]
-		);
+            // Select the product ID from the WooCommerce Single Product Block
+            const productId = useSelect( ( select: any ): number | null => {
+                const blocks = select( "core/block-editor" ).getBlocks();
+                const singleProductBlock = blocks.find(
+                    ( block: any ) =>
+                        block.name === "woocommerce/single-product"
+                );
+                return singleProductBlock?.attributes?.productId ?? null;
+            }, [] );
 
-		// Update the product ID attribute if it changes
-		useEffect(() => {
-			if (productId && productId !== attributes.productId) {
-				setAttributes({ productId });
-			}
-		}, [productId]);
+            // Update the product ID attribute if it changes
+            useEffect( () => {
+                if ( productId && productId !== attributes.productId ) {
+                    setAttributes( { productId } );
+                }
+            }, [ productId ] );
 
-		// Fetch the rendered form from the REST API
-		useEffect(() => {
-			if (productId) {
-				axios
-					.get(`${stockNotificationBlock.apiUrl}/${stockNotificationBlock.restUrl}/stock-notification-form?product_id=${productId}`)
-					.then((response) => {
-						setFormHtml(response.data.html || __('Failed to load form.', 'notifima'));
-					});
-			} else {
-				setFormHtml(__('No product selected.', 'notifima'));
-			}
-		}, [productId]);
+            // Fetch the rendered form from the REST API
+            useEffect( () => {
+                if ( productId ) {
+                    axios
+                        .get(
+                            `${ stockNotificationBlock.apiUrl }/${ stockNotificationBlock.restUrl }/stock-notification-form?product_id=${ productId }`
+                        )
+                        .then( ( response ) => {
+                            setFormHtml(
+                                response.data.html ||
+                                    __( "Failed to load form.", "notifima" )
+                            );
+                        } );
+                } else {
+                    setFormHtml( __( "No product selected.", "notifima" ) );
+                }
+            }, [ productId ] );
 
-		return (
-			<div {...blockProps}>
-				<div dangerouslySetInnerHTML={{ __html: formHtml }} />
-			</div>
-		);
-	},
+            return (
+                <div { ...blockProps }>
+                    <div dangerouslySetInnerHTML={ { __html: formHtml } } />
+                </div>
+            );
+        },
 
-	save: () => {
-		// Save function remains empty since rendering is handled by the PHP render callback
-		return null;
-	},
-});
+        save: () => {
+            // Save function remains empty since rendering is handled by the PHP render callback
+            return null;
+        },
+    }
+);

@@ -6,7 +6,7 @@
     box-shadow: 0 0 0.125rem rgba(0, 0, 0, 0.125);
 }
 
-@import '/src/components/config.scss';
+@import '/src/components/config';
 
 .admin-middle-container-wrapper {
   .title-section {
@@ -149,7 +149,7 @@
       border-radius: 50%;
       border: 0.063rem solid white;
       transition: all 0.3s;
-      box-shadow: 0rem 0rem 0.313rem white;
+      box-shadow: 0 0 0.313rem white;
     }
   }
 
@@ -287,7 +287,7 @@
 
       &::after {
         left: calc(100% - 1.313rem);
-        transform: translatey(-50%);
+        transform: translateY(-50%);
         background-color: #fdfdfe;
       }
     }
@@ -329,7 +329,7 @@
         display: flex;
         align-items: stretch;
         width: 100%;
-        background-color: #ffffff;
+        background-color: #fff;
         min-height: 3.276rem;
         border-bottom-width: 0.063rem;
         border-bottom-color: rgba(0, 0, 0, 0.12);
@@ -368,7 +368,7 @@
         align-items: center;
         justify-content: center;
         color: rgba(0, 0, 0, 0.87);
-        background-color: #ffffff;
+        background-color: #fff;
         padding: 1.512rem;
       }
 
@@ -389,7 +389,6 @@
         }
 
         .table-row {
-          font-size: 0.85rem;
           padding: 0.313rem 0.5rem;
           font-size: 0.95rem;
           overflow: hidden;
@@ -497,7 +496,7 @@
               height: 3.15rem;
               padding: 0.25rem;
               border-radius: 0.25rem;
-              box-shadow: 0 0 0.125rem rgba($color: #000000, $alpha: 0.125);
+              box-shadow: 0 0 0.125rem rgba($color: #000, $alpha: 0.125);
             }
 
             input {
@@ -713,7 +712,7 @@
 }
 
 .inventory-manager {
-  background-image: url("../../assets/images/inventory-manager-monitor.png") !important; // force to set image for ungrade with pro for desktop-screen
+  background-image: url(../../assets/images/inventory-manager-monitor.png) !important; // force to set image for ungrade with pro for desktop-screen
   background-repeat: no-repeat;
   background-position: top left;
   background-size: contain;
@@ -722,7 +721,7 @@
 
 @media only screen and (max-width: 69.3rem) {
   .inventory-manager {
-    background-image: url("../../assets/images/inventory-manager-laptop.jpeg") !important; // force to set image for ungrade with pro for laptop-screen
+    background-image: url(../../assets/images/inventory-manager-laptop.jpeg) !important; // force to set image for ungrade with pro for laptop-screen
     background-repeat: no-repeat;
     background-position: top;
     background-size: contain;
@@ -731,7 +730,7 @@
 
 @media only screen and (max-width: 40.95rem) {
   .inventory-manager {
-    background-image: url("../../assets/images/inventory-manager-phone.jpeg") !important; // force to set image for ungrade with pro for mobile-screen
+    background-image: url(../../assets/images/inventory-manager-phone.jpeg) !important; // force to set image for ungrade with pro for mobile-screen
     background-repeat: no-repeat;
     background-position: top;
     background-size: contain;

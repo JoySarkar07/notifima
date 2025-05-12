@@ -21,7 +21,7 @@ h5.subscribe_for_interest_text {
 }
 
 .alert_container p {
-  margin-bottom: 0.0rem;
+  margin-bottom: 0.0;
   font-size: 0.693rem;
   font-weight: bold;
   font-style: italic;
@@ -32,7 +32,7 @@ h5.subscribe_for_interest_text {
   cursor: not-allowed;
 }
 
-.notifima-button.alert_loader:before {
+.notifima-button.alert_loader::before {
   content: "";
   display: inline-block;
   width: 0.63rem;

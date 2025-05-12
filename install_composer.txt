@@ -18,3 +18,41 @@ For create the composer file
     },
 
 3. composer dump-autoload
+
+4. composer config platform.php 8.0 ( latest php file )
+
+5. composer require php
+
+// For wpml supprot we need to use this 
+http_build_url
+
+
+//PHP_CodeSniffer rules for checking if your PHP code follows the official WordPress coding standards 
+//— like indentation, naming conventions, escaping, etc.
+
+6. composer require --dev wp-coding-standards/wpcs:dev-develop
+
+7. composer require --dev dealerdirect/phpcodesniffer-composer-installer:^0.7.2
+
+8. composer require --dev phpcompatibility/phpcompatibility
+
+add phpcs script into composer.json
+  "scripts": {
+      "phpcs": [
+          "vendor/bin/phpcs -p -s"
+      ]
+  }
+
+add phpcbf script into composer.json for beautify php code 
+"phpfix": [
+    "vendor/bin/phpcbf -p"
+  ]
+
+
+  // For unit test setup
+  9. composer require --dev phpunit/phpunit ( The main testing framework (PHPUnit) for writing unit tests. )
+  10. composer require --dev wp-phpunit/wp-phpunit ( Makes it easy to test WordPress-specific code (like plugins) using PHPUnit. )
+  11. composer require --dev yoast/phpunit-polyfills ( Provides polyfills for PHPUnit features across multiple versions. )
+  12. composer require --dev brain/monkey ( A powerful mocking framework for WordPress functions (which are normally not mockable). )
+
+  

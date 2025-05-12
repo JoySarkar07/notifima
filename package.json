@@ -1,80 +1,82 @@
 {
-  "name": "notifima",
-  "displayName": "woocommerce-product-stock-manager",
-  "version": "2.0.0",
-  "description": "=== WooCommerce Product Stock Manager ===",
-  "main": "index.js",
-  "directories": {
-    "lib": "lib"
-  },
-  "scripts": {
-    "clean": "node bin/clean-files",
-    "minify": "node bin/minify",
-    "makepot": "wp i18n make-pot --domain='notifima' --include='assets/js,classes,templates,config.php,product_stock_alert.php' . --headers='{\"Report-Msgid-Bugs-To\":\"https://notifima.com/contact/\"}' --file-comment=\"Copyright (c) $(date +'%Y') Notifima Inc. All Rights Reserved.\" languages/notifima.pot",
-    "release": "npm install && npm run readme && npm run build && npm run makepot && node bin/release",
-    "build": "wp-scripts build --progress && npm run minify && npm run clean",
-    "start": "wp-scripts start",
-    "format": "wp-scripts format",
-    "lint:css": "wp-scripts lint-style",
-    "lint:js": "wp-scripts lint-js --format=stylish",
-    "readme": "wp-readme-to-md"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/multivendorx/woocommerce-product-stock-alert.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/multivendorx/woocommerce-product-stock-alert/issues"
-  },
-  "homepage": "https://github.com/multivendorx/woocommerce-product-stock-alert#readme",
-  "dependencies": {
-    "@emotion/react": "^11.14.0",
-    "@emotion/styled": "^11.14.0",
-    "@mui/material": "^7.0.2",
-    "@tanstack/react-table": "^8.21.3",
-    "@tinymce/tinymce-react": "^6.1.0",
-    "@wordpress/react-i18n": "^4.21.0",
-    "@wordpress/scripts": "^30.7.0",
-    "react-csv": "^2.2.2",
-    "react-data-table-component": "^7.7.0",
-    "react-date-range": "^2.0.1",
-    "react-router-dom": "^7.5.0",
-    "ts-loader": "^9.5.2",
-    "typescript": "^5.8.3",
-    "zyra": "github:JoySarkar07/zyra"
-  },
-  "peerDependencies": {
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.26.10",
-    "@babel/preset-env": "^7.26.9",
-    "@babel/preset-react": "^7.26.3",
-    "@types/react": "^18.3.20",
-    "@types/react-csv": "^1.1.10",
-    "@types/react-date-range": "^1.4.10",
-    "@types/react-dom": "^18.3.6",
-    "@types/react-router-dom": "^5.3.3",
-    "@types/webpack-env": "^1.18.8",
-    "@types/wordpress__block-editor": "^11.5.16",
-    "@types/wordpress__blocks": "^12.5.17",
-    "@wordpress/block-editor": "^14.17.0",
-    "@wordpress/blocks": "^14.11.0",
-    "autoprefixer": "^10.4.21",
-    "babel-loader": "^10.0.0",
-    "clean-css": "^5.3.3",
-    "css-loader": "^7.1.2",
-    "file-loader": "^6.2.0",
-    "fs-extra": "^11.3.0",
-    "postcss-loader": "^8.1.1",
-    "replace-in-file": "^8.3.0",
-    "sass": "^1.87.0",
-    "sass-loader": "^16.0.5",
-    "style-loader": "^4.0.0",
-    "terser": "^5.39.0",
-    "wp-readme-to-markdown": "^1.0.1"
-  }
+    "name": "notifima",
+    "displayName": "woocommerce-product-stock-manager",
+    "version": "2.0.0",
+    "description": "=== WooCommerce Product Stock Manager ===",
+    "main": "index.js",
+    "directories": {
+        "lib": "lib"
+    },
+    "scripts": {
+        "clean": "node bin/clean-files",
+        "minify": "node bin/minify",
+        "makepot": "wp i18n make-pot --domain='notifima' --include='assets/js,classes,templates,config.php,product_stock_alert.php' . --headers='{\"Report-Msgid-Bugs-To\":\"https://notifima.com/contact/\"}' --file-comment=\"Copyright (c) $(date +'%Y') Notifima Inc. All Rights Reserved.\" languages/notifima.pot",
+        "release": "npm install && npm run readme && npm run build && npm run makepot && node bin/release",
+        "build": "wp-scripts build --progress && npm run minify && node bin/move-files && npm run clean",
+        "start": "wp-scripts start",
+        "format": "wp-scripts format",
+        "lint:css": "wp-scripts lint-style",
+        "lint:css-fix": "stylelint '**/*.{css,scss}' --fix",
+        "lint:js": "wp-scripts lint-js --format=stylish --ignore-path .eslintignore",
+        "readme": "wp-readme-to-md",
+        "composer": "composer dump-autoload"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/multivendorx/woocommerce-product-stock-alert.git"
+    },
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/multivendorx/woocommerce-product-stock-alert/issues"
+    },
+    "homepage": "https://github.com/multivendorx/woocommerce-product-stock-alert#readme",
+    "dependencies": {
+        "@emotion/react": "^11.14.0",
+        "@emotion/styled": "^11.14.0",
+        "@mui/material": "^7.0.2",
+        "@tanstack/react-table": "^8.21.3",
+        "@tinymce/tinymce-react": "^6.1.0",
+        "@wordpress/react-i18n": "^4.21.0",
+        "@wordpress/scripts": "^30.7.0",
+        "react-csv": "^2.2.2",
+        "react-data-table-component": "^7.7.0",
+        "react-date-range": "^2.0.1",
+        "react-router-dom": "^7.5.0",
+        "ts-loader": "^9.5.2",
+        "typescript": "^5.8.3",
+        "zyra": "github:JoySarkar07/zyra"
+    },
+    "peerDependencies": {
+        "react": "^18.3.1",
+        "react-dom": "^18.3.1"
+    },
+    "devDependencies": {
+        "@babel/core": "^7.26.10",
+        "@babel/preset-env": "^7.26.9",
+        "@babel/preset-react": "^7.26.3",
+        "@types/react": "^18.3.20",
+        "@types/react-csv": "^1.1.10",
+        "@types/react-date-range": "^1.4.10",
+        "@types/react-dom": "^18.3.6",
+        "@types/react-router-dom": "^5.3.3",
+        "@types/webpack-env": "^1.18.8",
+        "@types/wordpress__block-editor": "^11.5.16",
+        "@types/wordpress__blocks": "^12.5.17",
+        "@wordpress/block-editor": "^14.17.0",
+        "@wordpress/blocks": "^14.11.0",
+        "autoprefixer": "^10.4.21",
+        "babel-loader": "^10.0.0",
+        "clean-css": "^5.3.3",
+        "css-loader": "^7.1.2",
+        "file-loader": "^6.2.0",
+        "fs-extra": "^11.3.0",
+        "postcss-loader": "^8.1.1",
+        "replace-in-file": "^8.3.0",
+        "sass": "^1.87.0",
+        "sass-loader": "^16.0.5",
+        "style-loader": "^4.0.0",
+        "terser": "^5.39.0",
+        "wp-readme-to-markdown": "^1.0.1"
+    }
 }
