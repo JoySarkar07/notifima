@@ -1,10 +1,4 @@
-import React, {
-    createContext,
-    useReducer,
-    useContext,
-    ReactNode,
-    Dispatch,
-} from "react";
+import React, { createContext, useReducer, useContext, ReactNode } from "react";
 
 // Define action types
 type ModuleAction =

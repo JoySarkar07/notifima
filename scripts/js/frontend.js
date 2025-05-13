@@ -19,7 +19,8 @@ jQuery( function ( $ ) {
 
     /**
      * Subscribe user on subscribe button click.
-     * @param {object} event dom event object.
+     * 
+     * @param {Object} event dom event object.
      * @return {undefined}
      */
     function subscribe( event ) {
@@ -28,7 +29,8 @@ jQuery( function ( $ ) {
 
         /**
          * Subscriber form dom objects
-         * @var {object} dom objects
+         * 
+         * @var {member} dom objects
          */
         const form = $( this ).closest( ".notifima-subscribe-form" );
 
@@ -75,7 +77,7 @@ jQuery( function ( $ ) {
 
     /**
      * Process subscription
-     * @param {undefined}
+     * @param {Object}
      */
     function processForm( form ) {
         // Get data from form.
@@ -176,7 +178,7 @@ jQuery( function ( $ ) {
 
     /**
      * Unsubscribe user on subscribe button click.
-     * @param {object} event dom event object.
+     * @param {Object} event dom event object.
      * @return {undefined}
      */
     function unsubscribe( event ) {
@@ -185,7 +187,7 @@ jQuery( function ( $ ) {
 
         /**
          * Subscriber form dom objects
-         * @var {object} dom objects
+         * @var {Object} dom objects
          */
         const form = $( this ).parent().parent();
 
@@ -268,8 +270,8 @@ jQuery( function ( $ ) {
 
     /**
      * Check the email is valid email or not.
-     * @param {String} email email to check
-     * @returns {boolean} if the email is valid return true otherwise false
+     * @param {string} email email to check
+     * @return {boolean} if the email is valid return true otherwise false
      */
     function isEmail( email ) {
         if ( ! email ) return false;

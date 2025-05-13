@@ -55,4 +55,18 @@ add phpcbf script into composer.json for beautify php code
   11. composer require --dev yoast/phpunit-polyfills ( Provides polyfills for PHPUnit features across multiple versions. )
   12. composer require --dev brain/monkey ( A powerful mocking framework for WordPress functions (which are normally not mockable). )
 
-  
+  // run this command in terminal
+  // it create a install-wp-tests.sh file into bin folder
+  13.  wp scaffold plugin-tests notifima ( generate bin/install-wp-tests.sh tests/bootstrap.php and test-sample.php )
+
+
+
+
+
+
+
+
+
+
+
+drop database wordpress_test;

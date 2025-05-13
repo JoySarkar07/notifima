@@ -29,7 +29,7 @@ export default {
             key: "ban_email_domain_text",
             type: "textarea",
             label: __( "Blocked domain alert message", "notifima" ),
-            desc: __(
+            desc: __( 
                 " Create an alert message for users attempting to subscribe from blocked domains.",
                 "notifima"
             ),

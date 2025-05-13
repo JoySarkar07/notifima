@@ -191,22 +191,22 @@ const SubscribersList: React.FC = () => {
                     {
                         key: "all",
                         name: "All",
-                        count: responseData[ "all" ],
+                        count: responseData.all,
                     },
                     {
                         key: "subscribed",
                         name: "Subscribed",
-                        count: responseData[ "subscribed" ],
+                        count: responseData.subscribed,
                     },
                     {
                         key: "unsubscribed",
                         name: "Unsubscribed",
-                        count: responseData[ "unsubscribed" ],
+                        count: responseData.unsubscribed,
                     },
                     {
                         key: "mailsent",
                         name: "Mail Sent",
-                        count: responseData[ "mailsent" ],
+                        count: responseData.mailsent,
                     },
                 ] );
             } );
@@ -267,9 +267,9 @@ const SubscribersList: React.FC = () => {
         setOpenDatePicker( ! openDatePicker );
     };
 
-    const getSelectedRows = ( selectedRows: any, data: Subscriber[] ) => {
+    const getSelectedRows = ( selectedRows: any, rowData: Subscriber[] ) => {
         return Object.keys( selectedRows ).map(
-            ( key ) => data[ parseInt( key ) ]
+            ( key ) => rowData[ parseInt( key ) ]
         );
     };
 
@@ -299,8 +299,8 @@ const SubscribersList: React.FC = () => {
             },
         } ).then( ( response ) => {
             console.log( "response", response.data );
-            const data = JSON.parse( response.data );
-            setData( data );
+            const subscriberData = JSON.parse( response.data );
+            setData( subscriberData );
         } );
     }
 
@@ -349,8 +349,8 @@ const SubscribersList: React.FC = () => {
                     end_date: filters.date?.end_date,
                 },
             } ).then( ( response ) => {
-                const data = JSON.parse( response.data );
-                setAllData( data );
+                const subscriberData = JSON.parse( response.data );
+                setAllData( subscriberData );
                 csvLink.current?.link.click();
             } );
         }

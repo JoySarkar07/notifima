@@ -3,3 +3,5 @@ package-lock.json
 assets
 release
 vendor
+.circleci/
+.phpunit.result.cache

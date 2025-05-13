@@ -1,7 +1,6 @@
 // /* global appLocalizer */
 import Brand from "../../assets/images/Brand.png";
 import BrandSmall from "../../assets/images/Brand-small.png";
-import { useLocation } from "react-router-dom";
 import React, { useEffect, JSX } from "react";
 import { __ } from "@wordpress/i18n";
 // Context
@@ -9,11 +8,10 @@ import { SettingProvider, useSetting } from "../../contexts/SettingContext";
 // Services
 import { getTemplateData } from "../../services/templateService";
 // Utils
-import { getAvailableSettings, getSettingById, SettingContent } from "zyra";
-import { Support, AdminForm, Banner, Tabs } from "zyra";
+import { getAvailableSettings, getSettingById, SettingContent, Support, AdminForm, Banner, Tabs } from "zyra";
 import { useModules } from "../../contexts/ModuleContext";
 import ShowProPopup from "../Popup/Popup";
-import { Link } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 
 // Types
 type SettingItem = Record< string, any >;
@@ -139,7 +137,7 @@ const faqs = [
     },
 ];
 
-const Settings: React.FC< SettingsProps > = ( { id } ) => {
+const Settings: React.FC< SettingsProps > = () => {
     const settingsArray: SettingItem[] = getAvailableSettings(
         getTemplateData(),
         []

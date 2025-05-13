@@ -9,11 +9,11 @@ type SettingNode = {
 };
 
 const importAll = (
-    context: __WebpackModuleApi.RequireContext
+    inpContext: __WebpackModuleApi.RequireContext
 ): SettingNode[] => {
     const folderStructure: SettingNode[] = [];
 
-    context.keys().forEach( ( key ) => {
+    inpContext.keys().forEach( ( key ) => {
         const path = key.substring( 2 );
         const parts = path.split( "/" );
         const fileName = parts.pop();

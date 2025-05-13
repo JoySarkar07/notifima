@@ -21,9 +21,10 @@ const ThemeContext = createContext< ThemeContextType | undefined >( undefined );
 
 /**
  * dispatch function for theme related operation.
+ *
  * @param state state variable
  * @param action name of action for state variable.
- * @returns updated state
+ * @return updated state
  */
 const themeReducer = ( state: ThemeState, action: ThemeAction ): ThemeState => {
     switch ( action.type ) {
@@ -38,6 +39,7 @@ const themeReducer = ( state: ThemeState, action: ThemeAction ): ThemeState => {
 };
 
 /**
+ * @param ReactNode state variable
  * context provider component
  */
 const ThemeProvider: React.FC< { children: ReactNode } > = ( { children } ) => {
@@ -64,7 +66,7 @@ const ThemeProvider: React.FC< { children: ReactNode } > = ( { children } ) => {
 
 /**
  * get theme context.
- * @returns { theme, toggleTheme }
+ * @return { theme, toggleTheme }
  */
 const useTheme = (): ThemeContextType => {
     const context = useContext( ThemeContext );
